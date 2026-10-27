@@ -1,14 +1,3 @@
 <resources>
     <style name="Theme.Micrographics" parent="@android:style/Theme.DeviceDefault.DayNight" />
-
-    <style name="MgText">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:fontFamily">@font/geist_mono_mg</item>
-        <item name="android:textColor">@color/mg_fg</item>
-        <item name="android:textSize">@dimen/mg_text</item>
-        <item name="android:includeFontPadding">false</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:textAllCaps">true</item>
-    </style>
 </resources>

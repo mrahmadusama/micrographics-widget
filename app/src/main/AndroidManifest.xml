@@ -43,6 +43,18 @@
                 android:resource="@xml/micrographics_widget_info" />
         </receiver>
 
+        <receiver
+            android:name=".GooeyClockWidget"
+            android:exported="true"
+            android:label="@string/gooey_widget_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/gooey_widget_info" />
+        </receiver>
+
         <service
             android:name=".CalendarChangeJob"
             android:exported="false"

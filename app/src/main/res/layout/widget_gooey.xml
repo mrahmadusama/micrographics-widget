@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Home screen version of the Nothing OS 4 "Gooey" lock screen clock: four chunky digits,
+     no colon. WidgetUpdater draws the time with gooey_clock.ttf (built from Nothing's
+     gooey_0..9 drawables) into this ImageView, which scales it to fill the widget. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/gooey_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/gooey_time"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/gooey_preview" />
+</FrameLayout>

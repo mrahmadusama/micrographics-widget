@@ -23,13 +23,18 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:text="@string/setup_intro" />
-
         <Button
             android:id="@+id/btn_pin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:text="@string/setup_pin" />
+
+        <Button
+            android:id="@+id/btn_pin_gooey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setup_pin_gooey" />
 
         <TextView
             android:id="@+id/status_location"

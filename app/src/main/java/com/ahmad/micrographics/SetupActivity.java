@@ -52,6 +52,10 @@ public class SetupActivity extends Activity {
         pin.setEnabled(awm.isRequestPinAppWidgetSupported());
         pin.setOnClickListener(v ->
                 awm.requestPinAppWidget(new ComponentName(this, MicrographicsWidget.class), null, null));
+        Button pinGooey = findViewById(R.id.btn_pin_gooey);
+        pinGooey.setEnabled(awm.isRequestPinAppWidgetSupported());
+        pinGooey.setOnClickListener(v ->
+                awm.requestPinAppWidget(new ComponentName(this, GooeyClockWidget.class), null, null));
 
         findViewById(R.id.btn_permissions).setOnClickListener(v -> requestPermissions(new String[] {
                 Manifest.permission.READ_CALENDAR, Manifest.permission.ACCESS_COARSE_LOCATION,

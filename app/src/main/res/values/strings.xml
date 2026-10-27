@@ -10,7 +10,11 @@
 
     <string name="setup_title">Micrographics widget</string>
     <string name="setup_intro">Add the widget from your home screen: long-press an empty spot, tap Widgets, then find Micrographics.</string>
+    <string name="gooey_widget_name">Gooey clock</string>
+    <string name="gooey_widget_description">Nothing OS Gooey clock face: big, bold rounded digits.</string>
+
     <string name="setup_pin">Add widget to home screen</string>
+    <string name="setup_pin_gooey">Add Gooey clock to home screen</string>
     <string name="setup_permissions">Grant calendar and location access</string>
     <string name="setup_use_location">Use my approximate location</string>
     <string name="setup_city_hint">Or type a city (e.g. London)</string>

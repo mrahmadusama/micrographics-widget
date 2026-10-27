@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Home screen version of the Nothing OS 4 "Micrographics" lock screen clock.
-     The placeholder values below are what the widget picker preview shows. -->
+     Launchers draw widget text with system fonts only, so every text slot here is an ImageView
+     that WidgetUpdater fills with Geist Mono text rendered by TextBitmap. The mg_preview_*
+     images are the sample text the widget picker shows. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root"
     android:layout_width="match_parent"
@@ -17,11 +19,11 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <TextClock
+        <ImageView
             android:id="@+id/day_name"
-            style="@style/MgText"
-            android:format12Hour="EEE"
-            android:format24Hour="EEE" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/mg_preview_day" />
 
         <ImageView
             android:id="@+id/day_pill"
@@ -41,12 +43,12 @@
             android:scaleType="fitCenter"
             android:src="@drawable/micrographics_month_jul" />
 
-        <TextClock
+        <ImageView
             android:id="@+id/time"
-            style="@style/MgText"
-            android:layout_marginStart="@dimen/mg_gap_large"
-            android:format12Hour="h:mm"
-            android:format24Hour="HH:mm" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/mg_preview_time"
+            android:layout_marginStart="@dimen/mg_gap_large" />
     </LinearLayout>
 
     <!-- I< 23°(C)  * (SUNNY) -->
@@ -78,11 +80,12 @@
                 android:src="@drawable/micrographics_thermometer_indicator" />
         </FrameLayout>
 
-        <TextView
+        <ImageView
             android:id="@+id/temp"
-            style="@style/MgText"
-            android:layout_marginStart="@dimen/mg_gap_small"
-            android:text="23°" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/mg_preview_temp"
+            android:layout_marginStart="@dimen/mg_gap_small" />
 
         <ImageView
             android:id="@+id/temp_unit"
@@ -123,13 +126,12 @@
             android:scaleType="fitCenter"
             android:src="@drawable/micrographics_meeting_avatar" />
 
-        <TextView
+        <ImageView
             android:id="@+id/meeting_title"
-            style="@style/MgText"
-            android:layout_weight="1"
-            android:layout_marginStart="@dimen/mg_gap"
-            android:ellipsize="end"
-            android:text="Weekly design sync" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/mg_preview_title"
+            android:layout_marginStart="@dimen/mg_gap" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -140,7 +142,7 @@
             android:src="@drawable/micrographics_meeting_arrow" />
     </LinearLayout>
 
-    <!-- STARTING (hand) |_3MIN -->
+    <!-- STARTING (hand) ╰3MIN -->
     <LinearLayout
         android:id="@+id/status_row"
         android:layout_width="wrap_content"
@@ -149,10 +151,11 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <TextView
+        <ImageView
             android:id="@+id/status_label"
-            style="@style/MgText"
-            android:text="@string/label_starting" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/mg_preview_label" />
 
         <ImageView
             android:id="@+id/hands"
@@ -171,17 +174,16 @@
                 android:layout_height="26dp"
                 android:src="@drawable/mg_count_corner" />
 
-            <TextView
+            <ImageView
                 android:id="@+id/count"
-                style="@style/MgText"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:src="@drawable/mg_preview_count"
                 android:background="@drawable/mg_count_line"
-                android:gravity="center_vertical"
                 android:paddingStart="10dp"
                 android:paddingEnd="6dp"
                 android:paddingBottom="3dp"
-                android:text="3MIN"
-                android:textSize="@dimen/mg_text_small" />
+                android:scaleType="center" />
         </FrameLayout>
     </LinearLayout>
 </LinearLayout>
