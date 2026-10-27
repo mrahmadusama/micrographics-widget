@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Background of the countdown text: the underline of the "╰3MIN" bracket. It starts where
-     mg_count_corner ends and is as wide as the text. -->
+     mg_count_corner ends and is as wide as the text. Same 2.4dp thickness and baseline as the
+     corner's stroke, with a rounded far end to match the corner's round cap. -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:bottom="0.5dp"
         android:gravity="bottom|fill_horizontal"
-        android:height="1dp"
+        android:height="2.4dp"
         android:left="9.5dp">
         <shape android:shape="rectangle">
             <solid android:color="#F2F2F2" />
+            <corners
+                android:bottomRightRadius="1.2dp"
+                android:topRightRadius="1.2dp" />
         </shape>
     </item>
 </layer-list>

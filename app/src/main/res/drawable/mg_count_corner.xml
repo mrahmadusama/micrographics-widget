@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Left half of the countdown bracket "╰3MIN": a fixed-size rounded corner. The underline
-     (mg_count_line) stretches with the text, so the corner never distorts. -->
+     (mg_count_line) stretches with the text, so the corner never distorts. Both use a 2.4dp
+     stroke whose bottom edge sits on the bottom of the 26dp row (centre line y = 24.8). -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="10dp"
     android:height="26dp"
     android:viewportWidth="10"
     android:viewportHeight="26">
     <path
-        android:pathData="M1.8,1.2L1.8,16.5C1.8,21.2 5.3,25 10,25"
+        android:pathData="M1.8,1.2L1.8,16.3C1.8,21 5.3,24.8 10,24.8"
         android:strokeWidth="2.4"
         android:strokeColor="#F2F2F2"
         android:strokeLineCap="round" />
