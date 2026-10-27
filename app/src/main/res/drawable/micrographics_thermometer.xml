@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Converted from Nothing OS SystemUI (Micrographics clock face) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:height="24dp"
+    android:width="8dp"
+    android:viewportWidth="2"
+    android:viewportHeight="6">
+    <path
+        android:fillColor="#fff2f2f2"
+        android:pathData="M1.7148,0C1.8711,0 2,0.1328 2,0.3008C2,0.4648 1.8711,0.6016 1.7148,0.6016L1.2852,0.6016L1.2852,5.3984L1.7148,5.3984C1.8711,5.3984 2,5.5352 2,5.6992C2,5.8672 1.8711,6 1.7148,6L0.2852,6C0.1289,6 0,5.8672 0,5.6992C0,5.5352 0.1289,5.3984 0.2852,5.3984L0.7148,5.3984L0.7148,0.6016L0.2852,0.6016C0.1289,0.6016 0,0.4648 0,0.3008C0,0.1328 0.1289,0 0.2852,0ZM1.7148,0"
+        android:strokeColor="#00000000"
+        android:fillType="nonZero" />
+</vector>

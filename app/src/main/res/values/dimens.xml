@@ -1,0 +1,11 @@
+<resources>
+    <!-- Sized from the Nothing OS 4 lock screen: 24dp pills and icons, about 26dp between rows. -->
+    <color name="mg_fg">#F2F2F2</color>
+    <dimen name="mg_text">22sp</dimen>
+    <dimen name="mg_text_small">18sp</dimen>
+    <dimen name="mg_icon">24dp</dimen>
+    <dimen name="mg_row_gap">4dp</dimen>
+    <dimen name="mg_gap">8dp</dimen>
+    <dimen name="mg_gap_small">3dp</dimen>
+    <dimen name="mg_gap_large">16dp</dimen>
+</resources>

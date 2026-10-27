@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Converted from Nothing OS SystemUI (Micrographics clock face) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:height="18dp"
+    android:width="8dp"
+    android:viewportWidth="8"
+    android:viewportHeight="18">
+    <path
+        android:fillColor="#fff2f2f2"
+        android:pathData="M0,0h8v18h-8z" />
+</vector>

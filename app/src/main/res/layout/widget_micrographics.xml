@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Home screen version of the Nothing OS 4 "Micrographics" lock screen clock.
+     The placeholder values below are what the widget picker preview shows. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="start|center_vertical"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <!-- FRI (25) (JUL)  10:27 -->
+    <LinearLayout
+        android:id="@+id/date_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextClock
+            android:id="@+id/day_name"
+            style="@style/MgText"
+            android:format12Hour="EEE"
+            android:format24Hour="EEE" />
+
+        <ImageView
+            android:id="@+id/day_pill"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/mg_icon"
+            android:layout_marginStart="@dimen/mg_gap"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/mg_day_pill_placeholder" />
+
+        <ImageView
+            android:id="@+id/month"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/mg_icon"
+            android:layout_marginStart="@dimen/mg_gap_small"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/micrographics_month_jul" />
+
+        <TextClock
+            android:id="@+id/time"
+            style="@style/MgText"
+            android:layout_marginStart="@dimen/mg_gap_large"
+            android:format12Hour="h:mm"
+            android:format24Hour="HH:mm" />
+    </LinearLayout>
+
+    <!-- I< 23°(C)  * (SUNNY) -->
+    <LinearLayout
+        android:id="@+id/weather_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/mg_row_gap"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="16dp"
+            android:layout_height="@dimen/mg_icon">
+
+            <ImageView
+                android:layout_width="8dp"
+                android:layout_height="@dimen/mg_icon"
+                android:src="@drawable/micrographics_thermometer" />
+
+            <ImageView
+                android:id="@+id/therm_indicator"
+                android:layout_width="7dp"
+                android:layout_height="8dp"
+                android:layout_gravity="top|start"
+                android:layout_marginStart="9dp"
+                android:layout_marginTop="2dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/micrographics_thermometer_indicator" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/temp"
+            style="@style/MgText"
+            android:layout_marginStart="@dimen/mg_gap_small"
+            android:text="23°" />
+
+        <ImageView
+            android:id="@+id/temp_unit"
+            android:layout_width="@dimen/mg_icon"
+            android:layout_height="@dimen/mg_icon"
+            android:src="@drawable/micrographics_celcius" />
+
+        <ImageView
+            android:id="@+id/weather_icon"
+            android:layout_width="@dimen/mg_icon"
+            android:layout_height="@dimen/mg_icon"
+            android:layout_marginStart="@dimen/mg_gap_large"
+            android:src="@drawable/micrographics_weather_icon_sunny" />
+
+        <ImageView
+            android:id="@+id/weather_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/mg_icon"
+            android:layout_marginStart="@dimen/mg_gap"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/micrographics_weather_desc_sunny" />
+    </LinearLayout>
+
+    <!-- (avatar) WEEKLY DESIGN SYNC (->) -->
+    <LinearLayout
+        android:id="@+id/meeting_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/mg_row_gap"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/mg_icon"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/micrographics_meeting_avatar" />
+
+        <TextView
+            android:id="@+id/meeting_title"
+            style="@style/MgText"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/mg_gap"
+            android:ellipsize="end"
+            android:text="Weekly design sync" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/mg_icon"
+            android:layout_marginStart="@dimen/mg_gap"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/micrographics_meeting_arrow" />
+    </LinearLayout>
+
+    <!-- STARTING (hand) |_3MIN -->
+    <LinearLayout
+        android:id="@+id/status_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/mg_row_gap"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/status_label"
+            style="@style/MgText"
+            android:text="@string/label_starting" />
+
+        <ImageView
+            android:id="@+id/hands"
+            android:layout_width="@dimen/mg_icon"
+            android:layout_height="@dimen/mg_icon"
+            android:layout_marginStart="@dimen/mg_gap"
+            android:src="@drawable/micrographics_hands_3" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:layout_marginStart="@dimen/mg_gap">
+
+            <ImageView
+                android:layout_width="10dp"
+                android:layout_height="26dp"
+                android:src="@drawable/mg_count_corner" />
+
+            <TextView
+                android:id="@+id/count"
+                style="@style/MgText"
+                android:layout_height="match_parent"
+                android:background="@drawable/mg_count_line"
+                android:gravity="center_vertical"
+                android:paddingStart="10dp"
+                android:paddingEnd="6dp"
+                android:paddingBottom="3dp"
+                android:text="3MIN"
+                android:textSize="@dimen/mg_text_small" />
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>

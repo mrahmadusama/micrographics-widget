@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Converted from Nothing OS SystemUI (Micrographics clock face) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:height="73.04dp"
+    android:width="182.6dp"
+    android:viewportWidth="182.61"
+    android:viewportHeight="73.04">
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M36.52,0.76L146.09,0.76C165.84,0.76 181.85,16.77 181.85,36.52C181.85,56.27 165.84,72.28 146.09,72.28L36.52,72.28C16.77,72.28 0.76,56.27 0.76,36.52C0.76,16.77 16.77,0.76 36.52,0.76ZM36.52,0.76"
+        android:strokeColor="#fff2f2f2"
+        android:strokeWidth="1.52"
+        android:strokeLineCap="butt"
+        android:strokeLineJoin="miter" />
+    <path
+        android:fillColor="#fff2f2f2"
+        android:pathData="M48.85,61.94C45.68,61.94 42.91,61.27 40.55,59.93C38.22,58.55 36.39,56.59 35.05,54.04C33.76,51.5 33.07,48.48 32.98,45L39.94,44.46C40.03,48.17 40.81,50.91 42.29,52.7C43.76,54.49 45.97,55.38 48.91,55.38C51.86,55.38 54.05,54.51 55.48,52.77C56.95,50.98 57.69,48.3 57.69,44.73L57.69,13.33L64.71,13.33L64.71,44.73C64.71,50.09 63.31,54.31 60.5,57.39C57.69,60.42 53.8,61.94 48.85,61.94ZM72.19,60.87L86.12,13.33L95.22,13.33L109.15,60.87L101.85,60.87L90.67,20.63L79.49,60.87ZM79.96,48.48L82.1,41.99L99.24,41.99L101.38,48.48ZM115.29,60.87L115.29,13.33L123.86,13.33L139.45,50.89L139.45,13.33L146.35,13.33L146.35,60.87L137.78,60.87L122.18,23.31L122.18,60.87ZM115.29,60.87"
+        android:fillType="nonZero" />
+</vector>

@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Micrographics</string>
+    <string name="widget_name">Micrographics clock</string>
+    <string name="widget_description">Nothing OS Micrographics clock face: date, time, weather and your next meeting.</string>
+
+    <string name="label_starting">STARTING</string>
+    <string name="label_at">AT</string>
+    <string name="label_until">UNTIL</string>
+    <string name="minutes_format">%dMIN</string>
+
+    <string name="setup_title">Micrographics widget</string>
+    <string name="setup_intro">Add the widget from your home screen: long-press an empty spot, tap Widgets, then find Micrographics.</string>
+    <string name="setup_pin">Add widget to home screen</string>
+    <string name="setup_permissions">Grant calendar and location access</string>
+    <string name="setup_use_location">Use my approximate location</string>
+    <string name="setup_city_hint">Or type a city (e.g. London)</string>
+    <string name="setup_set_city">Set city</string>
+    <string name="setup_fahrenheit">Show temperature in °F</string>
+    <string name="setup_refresh">Refresh widget now</string>
+    <string name="setup_done">Done</string>
+    <string name="status_location_none">Weather location: not set</string>
+    <string name="status_location">Weather location: %1$s</string>
+    <string name="status_calendar_on">Calendar: next meeting shown</string>
+    <string name="status_calendar_off">Calendar: no access, meeting rows hidden</string>
+    <string name="status_locating">Finding your location…</string>
+    <string name="status_location_failed">Couldn\'t get a location. Type a city instead.</string>
+    <string name="status_city_failed">City not found.</string>
+    <string name="status_refreshed">Widget refreshed.</string>
+    <string name="my_location">current location</string>
+</resources>
