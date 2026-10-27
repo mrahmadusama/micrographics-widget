@@ -19,7 +19,7 @@ STARTING (hand) ╰3MIN
 The icons, month pills, weather labels and Gooey digits are Nothing's own vector drawables,
 decoded from Nothing OS `SystemUI.apk`. They belong to Nothing Technology and are included for
 personal use only; this repository is private for that reason. The Micrographics text font is
-Geist Mono (SIL Open Font License) with stylistic set 09 (plain zero) built in; the Gooey font
+Geist Mono (SIL Open Font License) at weight 400, with its standard slashed zero; the Gooey font
 (`gooey_clock.ttf`) was built from Nothing's `gooey_0`–`gooey_9` drawables.
 
 Launchers draw widget text with system fonts only, so both widgets render their text to
