@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -21,7 +22,7 @@ import java.io.IOException;
 
 /**
  * Launcher entry point and the widget's (optional) configuration screen: permissions,
- * weather location and temperature unit.
+ * weather location, temperature unit and widget colour.
  */
 public class SetupActivity extends Activity {
     private static final int REQUEST_PERMISSIONS = 1;
@@ -74,6 +75,16 @@ public class SetupActivity extends Activity {
         fahrenheit.setChecked(Prefs.fahrenheit(this));
         fahrenheit.setOnCheckedChangeListener((b, checked) -> {
             Prefs.setFahrenheit(this, checked);
+            refreshWidget();
+        });
+
+        RadioGroup color = findViewById(R.id.widget_color);
+        int[] colorButtons = {R.id.color_auto, R.id.color_light, R.id.color_dark};
+        color.check(colorButtons[Prefs.widgetColor(this)]);
+        color.setOnCheckedChangeListener((g, checkedId) -> {
+            for (int i = 0; i < colorButtons.length; i++) {
+                if (colorButtons[i] == checkedId) Prefs.setWidgetColor(this, i);
+            }
             refreshWidget();
         });
 

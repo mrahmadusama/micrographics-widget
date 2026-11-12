@@ -41,6 +41,10 @@ Needs Android 12 or newer.
 
 - A minute alarm redraws both widgets at the start of every minute. It doesn't wake the
   phone: while the screen is off it waits, then fires as soon as the screen comes on.
+- Widget colour: on **Auto** (the default) both widgets turn dark when the home screen
+  wallpaper is light, using the same wallpaper hint the launcher uses for dark icon labels,
+  and switch back within a minute of a wallpaper change. You can also force **Light** or
+  **Dark** in the app.
 - Weather comes from Open-Meteo (no API key), refreshed every 30 minutes for the location
   set in the app. Tap the weather row to change it or switch to °F.
 - The next timed calendar event in the next 12 hours shows on rows 3 and 4. Within an hour of

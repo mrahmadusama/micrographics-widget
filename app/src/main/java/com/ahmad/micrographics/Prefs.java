@@ -10,6 +10,7 @@ final class Prefs {
     private static final String LON = "lon";
     private static final String PLACE = "place";
     private static final String FAHRENHEIT = "fahrenheit";
+    private static final String WIDGET_COLOR = "widget_color";
     private static final String TEMP = "weather_temp";
     private static final String CODE = "weather_code";
     private static final String IS_DAY = "weather_is_day";
@@ -54,6 +55,15 @@ final class Prefs {
 
     static void setFahrenheit(Context c, boolean value) {
         sp(c).edit().putBoolean(FAHRENHEIT, value).remove(FETCHED_AT).apply();
+    }
+
+    /** One of WidgetColor.AUTO, LIGHT or DARK. */
+    static int widgetColor(Context c) {
+        return sp(c).getInt(WIDGET_COLOR, WidgetColor.AUTO);
+    }
+
+    static void setWidgetColor(Context c, int value) {
+        sp(c).edit().putInt(WIDGET_COLOR, value).apply();
     }
 
     static Weather weather(Context c) {

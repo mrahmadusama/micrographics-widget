@@ -22,7 +22,7 @@ final class DayPill {
 
     private DayPill() {}
 
-    static Bitmap draw(Context c, int day) {
+    static Bitmap draw(Context c, int day, int color) {
         float density = c.getResources().getDisplayMetrics().density;
         int h = Math.round(HEIGHT_DP * density);
         Typeface font = c.getResources().getFont(R.font.geist_mono_mg);
@@ -41,7 +41,7 @@ final class DayPill {
         Bitmap bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bmp);
         Paint fill = new Paint(Paint.ANTI_ALIAS_FLAG);
-        fill.setColor(c.getColor(R.color.mg_fg));
+        fill.setColor(color);
         canvas.drawRoundRect(new RectF(0, 0, w, h), h / 2f, h / 2f, fill);
 
         text.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));

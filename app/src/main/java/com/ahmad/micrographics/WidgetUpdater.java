@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.provider.AlarmClock;
@@ -52,6 +53,12 @@ final class WidgetUpdater {
             R.drawable.micrographics_hands_9, R.drawable.micrographics_hands_10,
     };
 
+    /** Icons and pills drawn from vector drawables, tinted to the widget colour. */
+    private static final int[] TINTED = {
+            R.id.month, R.id.thermometer, R.id.therm_indicator, R.id.temp_unit, R.id.weather_icon,
+            R.id.weather_desc, R.id.meeting_avatar, R.id.meeting_arrow, R.id.hands, R.id.count_corner,
+    };
+
     private WidgetUpdater() {}
 
     /** Redraws every placed widget, fetching weather first if it's stale. Blocks; call off the main thread. */
@@ -63,15 +70,16 @@ final class WidgetUpdater {
             CalendarChangeJob.cancel(c);
             return;
         }
+        int fg = WidgetColor.foreground(c);
         // Draw straight away with cached data, then again once fresh weather arrives.
-        renderGooey(c, gooey);
-        renderMicrographics(c, micro);
+        renderGooey(c, gooey, fg);
+        renderMicrographics(c, micro, fg);
         if (micro.length > 0) {
             Weather before = Prefs.weather(c);
             Weather.refreshIfStale(c);
             Weather after = Prefs.weather(c);
             if (after != null && (before == null || after.fetchedAt != before.fetchedAt)) {
-                renderMicrographics(c, micro);
+                renderMicrographics(c, micro, fg);
             }
             CalendarChangeJob.ensureScheduled(c);
         }
@@ -88,11 +96,11 @@ final class WidgetUpdater {
 
     // ---- Gooey ------------------------------------------------------------------------------
 
-    private static void renderGooey(Context c, int[] ids) {
+    private static void renderGooey(Context c, int[] ids, int fg) {
         if (ids.length == 0) return;
         String time = DateFormat.format(is24Hour(c) ? "HHmm" : "hhmm", System.currentTimeMillis()).toString();
         RemoteViews v = new RemoteViews(c.getPackageName(), R.layout.widget_gooey);
-        v.setImageViewBitmap(R.id.gooey_time, TextBitmap.drawPx(c, time, TextBitmap.gooey(c), GOOEY_TEXT_PX));
+        v.setImageViewBitmap(R.id.gooey_time, TextBitmap.drawPx(c, time, TextBitmap.gooey(c), GOOEY_TEXT_PX, fg));
         v.setContentDescription(R.id.gooey_time, DateFormat.getTimeFormat(c).format(System.currentTimeMillis()));
         v.setOnClickPendingIntent(R.id.gooey_root, activity(c, 10, new Intent(AlarmClock.ACTION_SHOW_ALARMS)));
         AppWidgetManager.getInstance(c).updateAppWidget(ids, v);
@@ -100,18 +108,21 @@ final class WidgetUpdater {
 
     // ---- Micrographics ----------------------------------------------------------------------
 
-    private static void renderMicrographics(Context c, int[] ids) {
+    private static void renderMicrographics(Context c, int[] ids, int fg) {
         if (ids.length == 0) return;
         long now = System.currentTimeMillis();
         Meeting meeting = Meeting.next(c, now);
         AppWidgetManager awm = AppWidgetManager.getInstance(c);
         for (int id : ids) {
-            awm.updateAppWidget(id, buildMicrographics(c, now, meeting, awm.getAppWidgetOptions(id)));
+            awm.updateAppWidget(id, buildMicrographics(c, now, meeting, awm.getAppWidgetOptions(id), fg));
         }
     }
 
-    private static RemoteViews buildMicrographics(Context c, long now, Meeting meeting, Bundle options) {
+    private static RemoteViews buildMicrographics(Context c, long now, Meeting meeting, Bundle options, int fg) {
         RemoteViews v = new RemoteViews(c.getPackageName(), R.layout.widget_micrographics);
+        ColorStateList tint = ColorStateList.valueOf(fg);
+        for (int id : TINTED) v.setColorStateList(id, "setImageTintList", tint);
+        v.setColorStateList(R.id.count, "setBackgroundTintList", tint);
         Typeface font = TextBitmap.geistMono(c);
         float textPx = c.getResources().getDimension(R.dimen.mg_text);
         Calendar cal = Calendar.getInstance();
@@ -119,22 +130,22 @@ final class WidgetUpdater {
 
         // Row 1: FRI (25) (JUL) 10:27
         String dayName = DateFormat.format("EEE", now).toString().toUpperCase(Locale.getDefault());
-        v.setImageViewBitmap(R.id.day_name, TextBitmap.drawPx(c, dayName, font, textPx));
-        v.setImageViewBitmap(R.id.day_pill, DayPill.draw(c, cal.get(Calendar.DAY_OF_MONTH)));
+        v.setImageViewBitmap(R.id.day_name, TextBitmap.drawPx(c, dayName, font, textPx, fg));
+        v.setImageViewBitmap(R.id.day_pill, DayPill.draw(c, cal.get(Calendar.DAY_OF_MONTH), fg));
         v.setImageViewResource(R.id.month, MONTHS[cal.get(Calendar.MONTH)]);
-        v.setImageViewBitmap(R.id.time, TextBitmap.drawPx(c, clockTime(c, now), font, textPx));
+        v.setImageViewBitmap(R.id.time, TextBitmap.drawPx(c, clockTime(c, now), font, textPx, fg));
         v.setContentDescription(R.id.date_row, DateFormat.format("EEEE d MMMM", now) + ", "
                 + DateFormat.getTimeFormat(c).format(now));
         v.setOnClickPendingIntent(R.id.date_row, activity(c, 1, new Intent(AlarmClock.ACTION_SHOW_ALARMS)));
 
-        bindWeather(c, v, font, textPx);
+        bindWeather(c, v, font, textPx, fg);
         v.setOnClickPendingIntent(R.id.weather_row, activity(c, 2, new Intent(c, SetupActivity.class)));
 
-        bindMeeting(c, v, now, meeting, font, textPx, titleChars(c, options, textPx));
+        bindMeeting(c, v, now, meeting, font, textPx, titleChars(c, options, textPx), fg);
         return v;
     }
 
-    private static void bindWeather(Context c, RemoteViews v, Typeface font, float textPx) {
+    private static void bindWeather(Context c, RemoteViews v, Typeface font, float textPx, int fg) {
         boolean fahrenheit = Prefs.fahrenheit(c);
         Weather w = Prefs.weather(c);
         v.setImageViewResource(R.id.temp_unit,
@@ -143,7 +154,7 @@ final class WidgetUpdater {
         v.setImageViewResource(R.id.weather_icon, Weather.iconRes(condition));
         v.setImageViewResource(R.id.weather_desc, Weather.descRes(condition));
         String temp = w == null ? "--°" : Math.round(w.temperature) + "°";
-        v.setImageViewBitmap(R.id.temp, TextBitmap.drawPx(c, temp, font, textPx));
+        v.setImageViewBitmap(R.id.temp, TextBitmap.drawPx(c, temp, font, textPx, fg));
         v.setContentDescription(R.id.weather_row, temp + (fahrenheit ? "F " : "C ") + condition.replace('_', ' '));
         float top = 8;
         if (w != null) {
@@ -156,7 +167,7 @@ final class WidgetUpdater {
     }
 
     private static void bindMeeting(Context c, RemoteViews v, long now, Meeting m, Typeface font, float textPx,
-            int maxTitleChars) {
+            int maxTitleChars, int fg) {
         int visibility = m == null ? View.GONE : View.VISIBLE;
         v.setViewVisibility(R.id.meeting_row, visibility);
         v.setViewVisibility(R.id.status_row, visibility);
@@ -164,7 +175,7 @@ final class WidgetUpdater {
 
         String title = m.title.toUpperCase(Locale.getDefault());
         if (title.length() > maxTitleChars) title = title.substring(0, Math.max(1, maxTitleChars - 1)).trim() + "…";
-        v.setImageViewBitmap(R.id.meeting_title, TextBitmap.drawPx(c, title, font, textPx));
+        v.setImageViewBitmap(R.id.meeting_title, TextBitmap.drawPx(c, title, font, textPx, fg));
         v.setContentDescription(R.id.meeting_title, m.title);
 
         String label;
@@ -184,9 +195,9 @@ final class WidgetUpdater {
             label = c.getString(R.string.label_until);
             count = clockTime(c, m.end);
         }
-        v.setImageViewBitmap(R.id.status_label, TextBitmap.drawPx(c, label, font, textPx));
+        v.setImageViewBitmap(R.id.status_label, TextBitmap.drawPx(c, label, font, textPx, fg));
         v.setImageViewBitmap(R.id.count, TextBitmap.drawPx(c, count, font,
-                c.getResources().getDimension(R.dimen.mg_text_small)));
+                c.getResources().getDimension(R.dimen.mg_text_small), fg));
         v.setContentDescription(R.id.status_row, label + " " + count);
         v.setViewVisibility(R.id.hands, hands > 0 ? View.VISIBLE : View.GONE);
         if (hands > 0) v.setImageViewResource(R.id.hands, HANDS[hands - 1]);
