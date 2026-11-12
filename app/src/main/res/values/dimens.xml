@@ -1,6 +1,8 @@
 <resources>
     <!-- Sized from the Nothing OS 4 lock screen: 24dp pills and icons, about 26dp between rows. -->
+    <!-- Widget foreground on dark wallpapers, and on light ones (see WidgetColor). -->
     <color name="mg_fg">#F2F2F2</color>
+    <color name="mg_fg_dark">#141414</color>
     <dimen name="mg_text">22sp</dimen>
     <dimen name="mg_text_small">18sp</dimen>
     <dimen name="mg_icon">24dp</dimen>

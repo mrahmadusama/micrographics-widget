@@ -20,6 +20,10 @@
     <string name="setup_city_hint">Or type a city (e.g. London)</string>
     <string name="setup_set_city">Set city</string>
     <string name="setup_fahrenheit">Show temperature in °F</string>
+    <string name="setup_color">Widget colour</string>
+    <string name="setup_color_auto">Auto: dark on light wallpapers</string>
+    <string name="setup_color_light">Light (for dark wallpapers)</string>
+    <string name="setup_color_dark">Dark (for light wallpapers)</string>
     <string name="setup_refresh">Refresh widget now</string>
     <string name="setup_done">Done</string>
     <string name="status_location_none">Weather location: not set</string>
