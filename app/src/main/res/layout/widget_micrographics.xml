@@ -65,6 +65,7 @@
             android:layout_height="@dimen/mg_icon">
 
             <ImageView
+                android:id="@+id/thermometer"
                 android:layout_width="8dp"
                 android:layout_height="@dimen/mg_icon"
                 android:src="@drawable/micrographics_thermometer" />
@@ -95,9 +96,11 @@
 
         <ImageView
             android:id="@+id/weather_icon"
-            android:layout_width="@dimen/mg_icon"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/mg_icon"
             android:layout_marginStart="@dimen/mg_gap_large"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
             android:src="@drawable/micrographics_weather_icon_sunny" />
 
         <ImageView
@@ -110,6 +113,29 @@
             android:src="@drawable/micrographics_weather_desc_sunny" />
     </LinearLayout>
 
+    <!-- (cake) ALEX'S BIRTHDAY: all-day birthday events today. -->
+    <LinearLayout
+        android:id="@+id/birthday_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/mg_row_gap"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/birthday_icon"
+            android:layout_width="@dimen/mg_icon"
+            android:layout_height="@dimen/mg_icon"
+            android:src="@drawable/mg_icon_cake" />
+
+        <ImageView
+            android:id="@+id/birthday_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/mg_gap" />
+    </LinearLayout>
+
     <!-- (avatar) WEEKLY DESIGN SYNC (->) -->
     <LinearLayout
         android:id="@+id/meeting_row"
@@ -120,6 +146,7 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:id="@+id/meeting_avatar"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/mg_icon"
             android:adjustViewBounds="true"
@@ -134,6 +161,7 @@
             android:layout_marginStart="@dimen/mg_gap" />
 
         <ImageView
+            android:id="@+id/meeting_arrow"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/mg_icon"
             android:layout_marginStart="@dimen/mg_gap"
@@ -170,16 +198,131 @@
             android:layout_marginStart="@dimen/mg_gap">
 
             <ImageView
+                android:id="@+id/count_corner"
                 android:layout_width="10dp"
                 android:layout_height="26dp"
                 android:src="@drawable/mg_count_corner" />
+
+            <!-- The underline is its own ImageView (not the count's background) so it can be
+                 tinted with the rest of the widget. -->
+            <ImageView
+                android:id="@+id/count_line"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:src="@drawable/mg_count_line" />
 
             <ImageView
                 android:id="@+id/count"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:src="@drawable/mg_preview_count"
-                android:background="@drawable/mg_count_line"
+                android:paddingStart="10dp"
+                android:paddingEnd="6dp"
+                android:paddingBottom="3dp"
+                android:scaleType="center" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <!-- ALARM (clock) ╰7:00: the next alarm within a week. -->
+    <LinearLayout
+        android:id="@+id/alarm_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/mg_row_gap"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/alarm_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/alarm_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/mg_icon"
+            android:layout_marginStart="@dimen/mg_gap"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/mg_icon_alarm" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:layout_marginStart="@dimen/mg_gap">
+
+            <ImageView
+                android:id="@+id/alarm_corner"
+                android:layout_width="10dp"
+                android:layout_height="26dp"
+                android:src="@drawable/mg_count_corner" />
+
+            <ImageView
+                android:id="@+id/alarm_line"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:src="@drawable/mg_count_line" />
+
+            <ImageView
+                android:id="@+id/alarm_count"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingStart="10dp"
+                android:paddingEnd="6dp"
+                android:paddingBottom="3dp"
+                android:scaleType="center" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <!-- CHARGING (bolt) ╰82% · 40MIN: while plugged in. -->
+    <LinearLayout
+        android:id="@+id/charge_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/mg_row_gap"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/charge_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/charge_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/mg_icon"
+            android:layout_marginStart="@dimen/mg_gap"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/micrographics_weather_icon_thunder" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:layout_marginStart="@dimen/mg_gap">
+
+            <ImageView
+                android:id="@+id/charge_corner"
+                android:layout_width="10dp"
+                android:layout_height="26dp"
+                android:src="@drawable/mg_count_corner" />
+
+            <ImageView
+                android:id="@+id/charge_line"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:src="@drawable/mg_count_line" />
+
+            <ImageView
+                android:id="@+id/charge_count"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:paddingStart="10dp"
                 android:paddingEnd="6dp"
                 android:paddingBottom="3dp"

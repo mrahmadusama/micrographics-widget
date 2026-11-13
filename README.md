@@ -48,6 +48,17 @@ Needs Android 12 or newer.
   down too. Once it starts the row shows when it ends. Calendar edits show up within about
   15 seconds.
 
+## Colours and rows
+
+- **Widget colour**: Auto (default) picks white or black from the wallpaper's brightness. You can
+  also force Light or Dark, or follow the system theme.
+- **Material You accents** (on by default) fill the pills with the wallpaper's primary colour and
+  draw the weather icon and countdowns in its tertiary colour. Turn it off for plain monochrome.
+- **Rows**: weather, next meeting, today's birthdays (`(cake) ALEX'S BIRTHDAY`), next alarm
+  (`ALARM (clock) ╰7:00`) and battery while charging (`CHARGING (bolt) ╰82% · 40MIN`). Each can be
+  turned off in the app. When the widget is too short for all of them, they drop in this order:
+  alarm, birthdays, charging, meeting, weather.
+
 ## Build
 
 Needs JDK 17 and the Android SDK (platform 35). Set `sdk.dir` in `local.properties`, then:

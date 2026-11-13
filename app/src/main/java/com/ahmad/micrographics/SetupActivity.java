@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -21,7 +22,7 @@ import java.io.IOException;
 
 /**
  * Launcher entry point and the widget's (optional) configuration screen: permissions,
- * weather location and temperature unit.
+ * weather location, temperature unit, widget colour and which rows to show.
  */
 public class SetupActivity extends Activity {
     private static final int REQUEST_PERMISSIONS = 1;
@@ -77,11 +78,43 @@ public class SetupActivity extends Activity {
             refreshWidget();
         });
 
+        RadioGroup ink = findViewById(R.id.ink);
+        // Indexed by the Prefs.INK_* values.
+        int[] inkButtons = {R.id.ink_light, R.id.ink_dark, R.id.ink_system, R.id.ink_auto};
+        ink.check(inkButtons[Prefs.ink(this)]);
+        ink.setOnCheckedChangeListener((group, checkedId) -> {
+            for (int i = 0; i < inkButtons.length; i++) {
+                if (inkButtons[i] == checkedId) Prefs.setInk(this, i);
+            }
+            refreshWidget();
+        });
+
+        Switch accents = findViewById(R.id.switch_accents);
+        accents.setChecked(Prefs.accents(this));
+        accents.setOnCheckedChangeListener((b, checked) -> {
+            Prefs.setAccents(this, checked);
+            refreshWidget();
+        });
+        bindRowSwitch(R.id.show_weather, Prefs.ROW_WEATHER);
+        bindRowSwitch(R.id.show_meeting, Prefs.ROW_MEETING);
+        bindRowSwitch(R.id.show_birthday, Prefs.ROW_BIRTHDAY);
+        bindRowSwitch(R.id.show_alarm, Prefs.ROW_ALARM);
+        bindRowSwitch(R.id.show_charging, Prefs.ROW_CHARGING);
+
         findViewById(R.id.btn_refresh).setOnClickListener(v -> {
             refreshWidget();
             statusMessage.setText(R.string.status_refreshed);
         });
         findViewById(R.id.btn_done).setOnClickListener(v -> finish());
+    }
+
+    private void bindRowSwitch(int id, String row) {
+        Switch s = findViewById(id);
+        s.setChecked(Prefs.show(this, row));
+        s.setOnCheckedChangeListener((b, checked) -> {
+            Prefs.setShow(this, row, checked);
+            refreshWidget();
+        });
     }
 
     @Override

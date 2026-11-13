@@ -7,6 +7,10 @@
     <string name="label_at">AT</string>
     <string name="label_until">UNTIL</string>
     <string name="minutes_format">%dMIN</string>
+    <string name="hours_minutes_format">%1$dH %2$dMIN</string>
+    <string name="label_alarm">ALARM</string>
+    <string name="label_charging">CHARGING</string>
+    <string name="label_charged">CHARGED</string>
 
     <string name="setup_title">Micrographics widget</string>
     <string name="setup_intro">Add the widget from your home screen: long-press an empty spot, tap Widgets, then find Micrographics.</string>
@@ -20,6 +24,18 @@
     <string name="setup_city_hint">Or type a city (e.g. London)</string>
     <string name="setup_set_city">Set city</string>
     <string name="setup_fahrenheit">Show temperature in °F</string>
+    <string name="setup_ink">Widget colour</string>
+    <string name="setup_ink_auto">Auto: white or black to suit the wallpaper</string>
+    <string name="setup_accents">Material You accents (pills and countdowns follow your wallpaper colours)</string>
+    <string name="setup_rows">Rows (they drop from the bottom when the widget is too short)</string>
+    <string name="setup_show_weather">Weather</string>
+    <string name="setup_show_meeting">Next meeting</string>
+    <string name="setup_show_birthday">Today\'s birthdays</string>
+    <string name="setup_show_alarm">Next alarm</string>
+    <string name="setup_show_charging">Battery while charging</string>
+    <string name="setup_ink_light">Light: white, for dark wallpapers</string>
+    <string name="setup_ink_dark">Dark: black, for light wallpapers</string>
+    <string name="setup_ink_system">Match system theme: white in dark theme, black in light theme</string>
     <string name="setup_refresh">Refresh widget now</string>
     <string name="setup_done">Done</string>
     <string name="status_location_none">Weather location: not set</string>

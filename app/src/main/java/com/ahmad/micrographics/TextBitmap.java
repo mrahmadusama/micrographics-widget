@@ -24,20 +24,20 @@ final class TextBitmap {
     }
 
     /**
-     * Draws {@code text} at {@code sizeSp} in the widget foreground colour. The bitmap spans the
+     * Draws {@code text} at {@code sizeSp} in {@code color}. The bitmap spans the
      * font's full ascent and descent, so caps sit centred and rows of mixed text line up. Its
      * density matches the screen, so an ImageView shows it at exactly that size.
      */
-    static Bitmap draw(Context c, String text, Typeface font, float sizeSp) {
+    static Bitmap draw(Context c, String text, Typeface font, float sizeSp, int color) {
         DisplayMetrics dm = c.getResources().getDisplayMetrics();
-        return drawPx(c, text, font, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sizeSp, dm));
+        return drawPx(c, text, font, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sizeSp, dm), color);
     }
 
-    static Bitmap drawPx(Context c, String text, Typeface font, float sizePx) {
+    static Bitmap drawPx(Context c, String text, Typeface font, float sizePx, int color) {
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.SUBPIXEL_TEXT_FLAG);
         paint.setTypeface(font);
         paint.setTextSize(sizePx);
-        paint.setColor(c.getColor(R.color.mg_fg));
+        paint.setColor(color);
         Paint.FontMetrics fm = paint.getFontMetrics();
         int w = Math.max(1, (int) Math.ceil(paint.measureText(text)));
         int h = Math.max(1, (int) Math.ceil(fm.descent - fm.ascent));

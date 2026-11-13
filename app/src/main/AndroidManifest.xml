@@ -37,6 +37,8 @@
                 <action android:name="android.intent.action.TIME_SET" />
                 <action android:name="android.intent.action.TIMEZONE_CHANGED" />
                 <action android:name="android.intent.action.LOCALE_CHANGED" />
+                <!-- One of the few implicit broadcasts apps still get: redraw when an alarm is set. -->
+                <action android:name="android.app.action.NEXT_ALARM_CLOCK_CHANGED" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"

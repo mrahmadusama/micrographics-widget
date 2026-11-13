@@ -98,6 +98,84 @@
             android:layout_marginTop="12dp"
             android:text="@string/setup_fahrenheit" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/setup_ink" />
+
+        <RadioGroup
+            android:id="@+id/ink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioButton
+                android:id="@+id/ink_auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/setup_ink_auto" />
+
+            <RadioButton
+                android:id="@+id/ink_light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/setup_ink_light" />
+
+            <RadioButton
+                android:id="@+id/ink_dark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/setup_ink_dark" />
+
+            <RadioButton
+                android:id="@+id/ink_system"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/setup_ink_system" />
+        </RadioGroup>
+
+        <Switch
+            android:id="@+id/switch_accents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setup_accents" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/setup_rows" />
+
+        <Switch
+            android:id="@+id/show_weather"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setup_show_weather" />
+
+        <Switch
+            android:id="@+id/show_meeting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setup_show_meeting" />
+
+        <Switch
+            android:id="@+id/show_birthday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setup_show_birthday" />
+
+        <Switch
+            android:id="@+id/show_alarm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setup_show_alarm" />
+
+        <Switch
+            android:id="@+id/show_charging"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setup_show_charging" />
+
         <Button
             android:id="@+id/btn_refresh"
             android:layout_width="match_parent"

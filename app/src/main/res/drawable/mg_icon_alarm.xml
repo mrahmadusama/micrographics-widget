@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Alarm clock for the "ALARM" row, drawn to match the Micrographics icon set: one solid
+     shape on the 73dp grid, hands cut out. Tinted at runtime like the other icons. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="73.04dp"
+    android:height="73.04dp"
+    android:viewportWidth="73.04"
+    android:viewportHeight="73.04">
+    <path
+        android:fillColor="#fff2f2f2"
+        android:fillType="evenOdd"
+        android:pathData="M36.52,14A28,28 0,1 0,36.52 70A28,28 0,1 0,36.52 14Z M33.02,26.5C33.02,24.57 34.59,23 36.52,23C38.45,23 40.02,24.57 40.02,26.5L40.02,40.1L48.6,45.05C50.27,46.02 50.84,48.15 49.88,49.83C48.91,51.5 46.77,52.07 45.1,51.1L34.77,45.14C33.69,44.51 33.02,43.36 33.02,42.11Z" />
+    <path
+        android:fillColor="#fff2f2f2"
+        android:pathData="M4.6,21.9C1.2,15.4 3.7,7.4 10.2,4C14.8,1.6 20.2,2.2 24.1,5.2C25.3,6.1 25.2,7.9 24,8.8L8.9,22.4C7.6,23.6 5.4,23.3 4.6,21.9Z M68.44,21.9C71.84,15.4 69.34,7.4 62.84,4C58.24,1.6 52.84,2.2 48.94,5.2C47.74,6.1 47.84,7.9 49.04,8.8L64.14,22.4C65.44,23.6 67.64,23.3 68.44,21.9Z" />
+</vector>
