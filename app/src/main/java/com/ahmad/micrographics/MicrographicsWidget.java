@@ -13,6 +13,9 @@ public class MicrographicsWidget extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        if (WidgetUpdater.ACTION_TORCH_OFF.equals(intent.getAction())) {
+            DeviceStatus.torchOff(context);
+        }
         refreshAsync(context, goAsync());
     }
 

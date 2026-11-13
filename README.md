@@ -54,10 +54,17 @@ Needs Android 12 or newer.
   also force Light or Dark, or follow the system theme.
 - **Material You accents** (on by default) fill the pills with the wallpaper's primary colour and
   draw the weather icon and countdowns in its tertiary colour. Turn it off for plain monochrome.
-- **Rows**: weather, next meeting, today's birthdays (`(cake) ALEX'S BIRTHDAY`), next alarm
+- **Rows**: running timer (`TIMER (hourglass) ╰4MIN`), flashlight while on
+  (`FLASHLIGHT (torch) ╰ON`), weather, next meeting, today's birthdays (`(cake) ALEX'S BIRTHDAY`), next alarm
   (`ALARM (clock) ╰7:00`) and battery while charging (`CHARGING (bolt) ╰82% · 40MIN`). Each can be
   turned off in the app. When the widget is too short for all of them, they drop in this order:
-  alarm, birthdays, charging, meeting, weather.
+  alarm, birthdays, charging, meeting, weather, flashlight, timer.
+- **Taps**: tapping the widget opens the clock app. While the flashlight is on, tapping anywhere
+  on either widget turns it off. Turn on "Rows open their own apps" to have the meeting open the
+  calendar, the alarm open its app, and so on.
+- **Timers** come from the Clock app's notification, so they need notification access (button in
+  the app). Sideloaded apps may first need App info, ⋮, Allow restricted settings. The same access
+  makes the flashlight row appear instantly instead of within a minute.
 
 ## Build
 

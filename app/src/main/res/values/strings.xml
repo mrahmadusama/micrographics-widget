@@ -9,6 +9,14 @@
     <string name="minutes_format">%dMIN</string>
     <string name="hours_minutes_format">%1$dH %2$dMIN</string>
     <string name="label_alarm">ALARM</string>
+    <string name="label_timer">TIMER</string>
+    <string name="timer_paused">PAUSED</string>
+    <string name="timer_done">DONE</string>
+    <string name="label_flashlight">FLASHLIGHT</string>
+    <string name="torch_tap_off">TAP TO TURN OFF</string>
+    <string name="torch_off_short">TURN OFF</string>
+    <string name="torch_description">Flashlight on. Tap to turn it off.</string>
+    <string name="listener_name">Micrographics timers and flashlight</string>
     <string name="label_charging">CHARGING</string>
     <string name="label_charged">CHARGED</string>
 
@@ -28,6 +36,8 @@
     <string name="setup_ink_auto">Auto: white or black to suit the wallpaper</string>
     <string name="setup_accents">Material You accents (pills and countdowns follow your wallpaper colours)</string>
     <string name="setup_rows">Rows (they drop from the bottom when the widget is too short)</string>
+    <string name="setup_show_timer">Running timer (needs notification access)</string>
+    <string name="setup_show_flashlight">Flashlight while on (tap the widget to turn it off)</string>
     <string name="setup_show_weather">Weather</string>
     <string name="setup_show_meeting">Next meeting</string>
     <string name="setup_show_birthday">Today\'s birthdays</string>
@@ -36,6 +46,10 @@
     <string name="setup_ink_light">Light: white, for dark wallpapers</string>
     <string name="setup_ink_dark">Dark: black, for light wallpapers</string>
     <string name="setup_ink_system">Match system theme: white in dark theme, black in light theme</string>
+    <string name="setup_rows_open_apps">Rows open their own apps (calendar, alarms, battery). Off: tapping anywhere opens the clock app.</string>
+    <string name="setup_notification_access">Allow notification access</string>
+    <string name="status_listener_on">Notification access: on (timers shown)</string>
+    <string name="status_listener_off">Notification access: off. Timers need it. If Android calls it a restricted setting: App info, ⋮, Allow restricted settings.</string>
     <string name="setup_refresh">Refresh widget now</string>
     <string name="setup_done">Done</string>
     <string name="status_location_none">Weather location: not set</string>

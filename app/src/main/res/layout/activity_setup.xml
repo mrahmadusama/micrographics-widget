@@ -147,6 +147,18 @@
             android:text="@string/setup_rows" />
 
         <Switch
+            android:id="@+id/show_timer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setup_show_timer" />
+
+        <Switch
+            android:id="@+id/show_flashlight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setup_show_flashlight" />
+
+        <Switch
             android:id="@+id/show_weather"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -175,6 +187,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/setup_show_charging" />
+
+        <Switch
+            android:id="@+id/switch_rows_open_apps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/setup_rows_open_apps" />
+
+        <TextView
+            android:id="@+id/status_listener"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
+        <Button
+            android:id="@+id/btn_listener"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setup_notification_access" />
 
         <Button
             android:id="@+id/btn_refresh"

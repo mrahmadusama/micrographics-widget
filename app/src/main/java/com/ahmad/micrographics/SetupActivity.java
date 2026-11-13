@@ -4,12 +4,14 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
@@ -95,11 +97,24 @@ public class SetupActivity extends Activity {
             Prefs.setAccents(this, checked);
             refreshWidget();
         });
+        bindRowSwitch(R.id.show_timer, Prefs.ROW_TIMER);
+        bindRowSwitch(R.id.show_flashlight, Prefs.ROW_FLASHLIGHT);
         bindRowSwitch(R.id.show_weather, Prefs.ROW_WEATHER);
         bindRowSwitch(R.id.show_meeting, Prefs.ROW_MEETING);
         bindRowSwitch(R.id.show_birthday, Prefs.ROW_BIRTHDAY);
         bindRowSwitch(R.id.show_alarm, Prefs.ROW_ALARM);
         bindRowSwitch(R.id.show_charging, Prefs.ROW_CHARGING);
+
+        Switch rowsOpenApps = findViewById(R.id.switch_rows_open_apps);
+        rowsOpenApps.setChecked(Prefs.rowsOpenApps(this));
+        rowsOpenApps.setOnCheckedChangeListener((b, checked) -> {
+            Prefs.setRowsOpenApps(this, checked);
+            refreshWidget();
+        });
+        findViewById(R.id.btn_listener).setOnClickListener(v -> startActivity(
+                new Intent(Settings.ACTION_NOTIFICATION_LISTENER_DETAIL_SETTINGS)
+                        .putExtra(Settings.EXTRA_NOTIFICATION_LISTENER_COMPONENT_NAME,
+                                new ComponentName(this, StatusListener.class).flattenToString())));
 
         findViewById(R.id.btn_refresh).setOnClickListener(v -> {
             refreshWidget();
@@ -133,6 +148,11 @@ public class SetupActivity extends Activity {
         boolean allGranted = Meeting.hasPermission(this) && hasLocationPermission();
         findViewById(R.id.btn_permissions).setEnabled(!allGranted);
         findViewById(R.id.btn_locate).setEnabled(hasLocationPermission());
+        boolean listener = getSystemService(NotificationManager.class)
+                .isNotificationListenerAccessGranted(new ComponentName(this, StatusListener.class));
+        ((TextView) findViewById(R.id.status_listener)).setText(
+                listener ? R.string.status_listener_on : R.string.status_listener_off);
+        findViewById(R.id.btn_listener).setEnabled(!listener);
     }
 
     private boolean hasLocationPermission() {

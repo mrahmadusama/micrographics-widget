@@ -113,6 +113,92 @@
             android:src="@drawable/micrographics_weather_desc_sunny" />
     </LinearLayout>
 
+    <!-- TIMER (hourglass) ╰4MIN: the soonest running timer. -->
+    <LinearLayout
+        android:id="@+id/timer_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/mg_row_gap"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/timer_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/timer_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/mg_icon"
+            android:layout_marginStart="@dimen/mg_gap"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/mg_icon_timer" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:layout_marginStart="@dimen/mg_gap">
+
+            <ImageView
+                android:id="@+id/timer_corner"
+                android:layout_width="10dp"
+                android:layout_height="26dp"
+                android:src="@drawable/mg_count_corner" />
+
+            <ImageView
+                android:id="@+id/timer_line"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:src="@drawable/mg_count_line" />
+
+            <ImageView
+                android:id="@+id/timer_count"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingStart="10dp"
+                android:paddingEnd="6dp"
+                android:paddingBottom="3dp"
+                android:scaleType="center" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <!-- FLASHLIGHT (torch) (TAP TO TURN OFF): tapping anywhere on the widget turns it off. -->
+    <LinearLayout
+        android:id="@+id/torch_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/mg_row_gap"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/torch_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/torch_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/mg_icon"
+            android:layout_marginStart="@dimen/mg_gap"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/mg_icon_flashlight" />
+
+        <ImageView
+            android:id="@+id/torch_pill"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/mg_icon"
+            android:layout_marginStart="@dimen/mg_gap"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter" />
+    </LinearLayout>
+
     <!-- (cake) ALEX'S BIRTHDAY: all-day birthday events today. -->
     <LinearLayout
         android:id="@+id/birthday_row"

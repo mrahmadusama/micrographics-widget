@@ -13,6 +13,9 @@ final class Prefs {
     private static final String INK = "ink";
     private static final String ACCENTS = "accents";
     private static final String SHOW = "show_";
+    private static final String ROWS_OPEN_APPS = "rows_open_apps";
+    private static final String TIMER_END = "timer_end";
+    private static final String TIMER_COUNT = "timer_count";
     private static final String TEMP = "weather_temp";
     private static final String CODE = "weather_code";
     private static final String IS_DAY = "weather_is_day";
@@ -82,6 +85,8 @@ final class Prefs {
     }
 
     /** Optional rows, each switchable in the setup screen. All are on by default. */
+    static final String ROW_TIMER = "timer";
+    static final String ROW_FLASHLIGHT = "flashlight";
     static final String ROW_WEATHER = "weather";
     static final String ROW_MEETING = "meeting";
     static final String ROW_BIRTHDAY = "birthday";
@@ -98,6 +103,33 @@ final class Prefs {
 
     static void setInk(Context c, int value) {
         sp(c).edit().putInt(INK, value).apply();
+    }
+
+    /** Tapping opens the clock app (default), or each row opens its own app. */
+    static boolean rowsOpenApps(Context c) {
+        return sp(c).getBoolean(ROWS_OPEN_APPS, false);
+    }
+
+    static void setRowsOpenApps(Context c, boolean value) {
+        sp(c).edit().putBoolean(ROWS_OPEN_APPS, value).apply();
+    }
+
+    /** Timer end time as stored by StatusListener: 0 for none, TIMER_PAUSED for a paused timer. */
+    static final long TIMER_PAUSED = -1;
+
+    static long timerEnd(Context c) {
+        return sp(c).getLong(TIMER_END, 0);
+    }
+
+    static int timerCount(Context c) {
+        return sp(c).getInt(TIMER_COUNT, 0);
+    }
+
+    /** Returns true when the stored timer changed. */
+    static boolean setTimer(Context c, long end, int count) {
+        if (timerEnd(c) == end && timerCount(c) == count) return false;
+        sp(c).edit().putLong(TIMER_END, end).putInt(TIMER_COUNT, count).commit();
+        return true;
     }
 
     static Weather weather(Context c) {

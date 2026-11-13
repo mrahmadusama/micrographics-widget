@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Flashlight for the flashlight row, drawn to match the Micrographics icon set: a rounded
+     torch (head, then a body with the switch cut out) shining three round-capped beams, like
+     the three lines beside the meeting avatar. Tinted at runtime. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="73.04dp"
+    android:height="73.04dp"
+    android:viewportWidth="73.04"
+    android:viewportHeight="73.04">
+    <!-- Head: a wide rounded top tapering into the body. -->
+    <path
+        android:fillColor="#fff2f2f2"
+        android:pathData="M22,20L51.04,20C54.35,20 57.04,22.69 57.04,26L57.04,26.6C57.04,28.2 56.4,29.7 55.27,30.83L48.1,38L24.94,38L17.77,30.83C16.64,29.7 16,28.2 16,26.6L16,26C16,22.69 18.69,20 22,20Z" />
+    <!-- Body with the switch cut out. -->
+    <path
+        android:fillColor="#fff2f2f2"
+        android:fillType="evenOdd"
+        android:pathData="M26,41L47.04,41L47.04,66C47.04,68.76 44.8,71 42.04,71L31,71C28.24,71 26,68.76 26,66Z M33.02,50.5A3.5,3.5 0,1 0,40.02 50.5A3.5,3.5 0,1 0,33.02 50.5Z" />
+    <!-- Three beams. -->
+    <path
+        android:pathData="M36.52,13L36.52,4 M24.5,14.5L18.5,8.5 M48.54,14.5L54.54,8.5"
+        android:strokeColor="#fff2f2f2"
+        android:strokeLineCap="round"
+        android:strokeWidth="6" />
+</vector>

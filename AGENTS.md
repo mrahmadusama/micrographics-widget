@@ -48,7 +48,19 @@ render it with `qlmanage -t -s 1400 -o <dir> page.html` (Quick Look outputs `pag
 - Icons must keep their aspect ratio: use `wrap_content` width with `adjustViewBounds` and
   `fitCenter`. Some weather icons are double-wide (two glyphs); a fixed square squashes them.
 - Rows below the date are optional and fit to the widget height (`rowsBelowDate`), dropping in
-  the order alarm, birthdays, charging, meeting, weather. Row toggles live in `Prefs.show`.
+  the order alarm, birthdays, charging, meeting, weather, flashlight, timer. Row toggles live in
+  `Prefs.show`.
+- Taps: by default only `R.id.root` has a click (clock app); row clicks are set only when
+  "rows open their own apps" is on, because a row with any click handler swallows taps meant for
+  the root. While the flashlight is on, root (and the Gooey clock) send `ACTION_TORCH_OFF`.
+- Timers have no API: `StatusListener` (a NotificationListenerService) parses the Clock app's
+  notification. On this phone (`com.android.deskclock`, Android 16) it's a MetricStyle
+  notification: `android.metrics[i].value` has `countDown=true` and `zeroTime` = end time. Test
+  with `adb shell am start -a android.intent.action.SET_TIMER --ei android.intent.extra.alarm.LENGTH 300 --ez android.intent.extra.alarm.SKIP_UI true`
+  and clean up with `android.intent.action.DISMISS_TIMER`. Don't grant notification access via
+  adb; the user grants it from the setup screen.
+- Flashlight state is read with a register/unregister TorchCallback each redraw
+  (`DeviceStatus.torchOn`); the listener service also keeps a callback so changes redraw at once.
 - "LABEL (icon) ╰COUNT" rows share one shape: a label bitmap, an icon, and a FrameLayout with
   `_corner`, `_line` and `_count` ImageViews. Copy an existing one and bind it with `bindBracket`.
 - Nothing's drawables (`micrographics_*`, gooey font) belong to Nothing; keep the repo private.

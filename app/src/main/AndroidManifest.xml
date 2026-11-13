@@ -57,6 +57,18 @@
                 android:resource="@xml/gooey_widget_info" />
         </receiver>
 
+        <!-- Reads the Clock app's timer notification and keeps flashlight changes instant.
+             Optional: everything else works without notification access. -->
+        <service
+            android:name=".StatusListener"
+            android:exported="true"
+            android:label="@string/listener_name"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
         <service
             android:name=".CalendarChangeJob"
             android:exported="false"

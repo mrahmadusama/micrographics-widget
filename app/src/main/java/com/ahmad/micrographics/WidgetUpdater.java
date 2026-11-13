@@ -28,6 +28,7 @@ import java.util.Locale;
  */
 final class WidgetUpdater {
     static final String ACTION_REFRESH = "com.ahmad.micrographics.REFRESH";
+    static final String ACTION_TORCH_OFF = "com.ahmad.micrographics.TORCH_OFF";
 
     private static final long MINUTE = 60_000L;
     /** Within this window before a meeting the status row counts down in minutes. */
@@ -71,6 +72,8 @@ final class WidgetUpdater {
             R.id.weather_icon, R.id.hands, R.id.count_corner, R.id.count_line,
             R.id.birthday_icon, R.id.alarm_icon, R.id.alarm_corner, R.id.alarm_line,
             R.id.charge_icon, R.id.charge_corner, R.id.charge_line,
+            R.id.timer_icon, R.id.timer_corner, R.id.timer_line,
+            R.id.torch_icon,
     };
 
     private WidgetUpdater() {}
@@ -115,7 +118,13 @@ final class WidgetUpdater {
         RemoteViews v = new RemoteViews(c.getPackageName(), R.layout.widget_gooey);
         v.setImageViewBitmap(R.id.gooey_time, TextBitmap.drawPx(c, time, TextBitmap.gooey(c), GOOEY_TEXT_PX, Palette.resolve(c).primary));
         v.setContentDescription(R.id.gooey_time, DateFormat.getTimeFormat(c).format(System.currentTimeMillis()));
-        v.setOnClickPendingIntent(R.id.gooey_root, activity(c, 10, new Intent(AlarmClock.ACTION_SHOW_ALARMS)));
+        if (Prefs.show(c, Prefs.ROW_FLASHLIGHT) && DeviceStatus.torchOn(c)) {
+            Intent off = new Intent(c, MicrographicsWidget.class).setAction(ACTION_TORCH_OFF);
+            v.setOnClickPendingIntent(R.id.gooey_root, PendingIntent.getBroadcast(c, 11, off,
+                    PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT));
+        } else {
+            v.setOnClickPendingIntent(R.id.gooey_root, activity(c, 10, new Intent(AlarmClock.ACTION_SHOW_ALARMS)));
+        }
         AppWidgetManager.getInstance(c).updateAppWidget(ids, v);
     }
 
@@ -137,9 +146,18 @@ final class WidgetUpdater {
         List<String> birthdays;
         AlarmManager.AlarmClockInfo alarm;
         DeviceStatus.Battery battery;
+        /** Soonest timer end, Prefs.TIMER_PAUSED, or 0 for none. */
+        long timerEnd;
+        int timerCount;
+        boolean torch;
 
         static Extras read(Context c, long now) {
             Extras x = new Extras();
+            if (Prefs.show(c, Prefs.ROW_TIMER)) {
+                x.timerEnd = Prefs.timerEnd(c);
+                x.timerCount = Prefs.timerCount(c);
+            }
+            if (Prefs.show(c, Prefs.ROW_FLASHLIGHT)) x.torch = DeviceStatus.torchOn(c);
             if (Prefs.show(c, Prefs.ROW_MEETING)) x.meeting = Meeting.next(c, now);
             if (Prefs.show(c, Prefs.ROW_BIRTHDAY)) x.birthdays = Birthdays.today(c, now);
             if (Prefs.show(c, Prefs.ROW_ALARM)) x.alarm = DeviceStatus.nextAlarm(c, now);
@@ -167,11 +185,26 @@ final class WidgetUpdater {
         v.setImageViewBitmap(R.id.time, TextBitmap.drawPx(c, clockTime(c, now), font, textPx, p.ink));
         v.setContentDescription(R.id.date_row, DateFormat.format("EEEE d MMMM", now) + ", "
                 + DateFormat.getTimeFormat(c).format(now));
-        v.setOnClickPendingIntent(R.id.date_row, activity(c, 1, new Intent(AlarmClock.ACTION_SHOW_ALARMS)));
 
-        // The rest is optional and fills the widget's height in priority order: weather, the
-        // meeting (two rows), charging, birthdays, then the next alarm. Rows that don't fit drop.
+        // Taps: while the flashlight is on, anywhere on the widget turns it off. Otherwise the
+        // widget opens the clock app, unless the user chose to have rows open their own apps.
+        if (x.torch) {
+            Intent off = new Intent(c, MicrographicsWidget.class).setAction(ACTION_TORCH_OFF);
+            v.setOnClickPendingIntent(R.id.root, PendingIntent.getBroadcast(c, 1, off,
+                    PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT));
+        } else {
+            v.setOnClickPendingIntent(R.id.root, activity(c, 1, new Intent(AlarmClock.ACTION_SHOW_ALARMS)));
+        }
+        boolean taps = !x.torch && Prefs.rowsOpenApps(c);
+
+        // The rest is optional and fills the widget's height in priority order: timer,
+        // flashlight, weather, the meeting (two rows), charging, birthdays, then the next alarm.
+        // Rows that don't fit drop.
         int rows = rowsBelowDate(c, options, font, textPx);
+        boolean timer = x.timerEnd != 0 && rows >= 1;
+        if (timer) rows--;
+        boolean torch = x.torch && rows >= 1;
+        if (torch) rows--;
         boolean weather = Prefs.show(c, Prefs.ROW_WEATHER) && rows >= 1;
         if (weather) rows--;
         Meeting meeting = x.meeting != null && rows >= 2 ? x.meeting : null;
@@ -185,14 +218,16 @@ final class WidgetUpdater {
         v.setViewVisibility(R.id.weather_row, weather ? View.VISIBLE : View.GONE);
         if (weather) {
             bindWeather(c, v, font, textPx, p);
-            v.setOnClickPendingIntent(R.id.weather_row, activity(c, 2, new Intent(c, SetupActivity.class)));
+            if (taps) v.setOnClickPendingIntent(R.id.weather_row, activity(c, 2, new Intent(c, SetupActivity.class)));
         }
         int titleChars = titleChars(c, options, textPx, MEETING_ROW_CHROME_DP);
-        bindMeeting(c, v, now, meeting, font, textPx, p, titleChars);
+        bindTimer(c, v, now, timer ? x.timerEnd : 0, x.timerCount, font, textPx, p, taps);
+        bindTorch(c, v, torch, font, textPx, p, options);
+        bindMeeting(c, v, now, meeting, font, textPx, p, titleChars, taps);
         bindBirthdays(c, v, now, birthday ? x.birthdays : null, font, textPx, p,
-                titleChars(c, options, textPx, BIRTHDAY_ROW_CHROME_DP));
-        bindAlarm(c, v, now, alarm, font, textPx, p);
-        bindCharging(c, v, battery, font, textPx, p);
+                titleChars(c, options, textPx, BIRTHDAY_ROW_CHROME_DP), taps);
+        bindAlarm(c, v, now, alarm, font, textPx, p, taps);
+        bindCharging(c, v, battery, font, textPx, p, taps);
         return v;
     }
 
@@ -237,7 +272,7 @@ final class WidgetUpdater {
     }
 
     private static void bindMeeting(Context c, RemoteViews v, long now, Meeting m, Typeface font, float textPx,
-            Palette p, int maxTitleChars) {
+            Palette p, int maxTitleChars, boolean taps) {
         int visibility = m == null ? View.GONE : View.VISIBLE;
         v.setViewVisibility(R.id.meeting_row, visibility);
         v.setViewVisibility(R.id.status_row, visibility);
@@ -273,6 +308,7 @@ final class WidgetUpdater {
                 ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, m.eventId))
                 .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, m.begin)
                 .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, m.end);
+        if (!taps) return;
         PendingIntent pi = activity(c, 3, open);
         v.setOnClickPendingIntent(R.id.meeting_row, pi);
         v.setOnClickPendingIntent(R.id.status_row, pi);
@@ -280,7 +316,7 @@ final class WidgetUpdater {
 
     /** (cake) ALEX'S BIRTHDAY, or ALEX'S BIRTHDAY +2 when there are several. */
     private static void bindBirthdays(Context c, RemoteViews v, long now, List<String> titles, Typeface font,
-            float textPx, Palette p, int maxChars) {
+            float textPx, Palette p, int maxChars, boolean taps) {
         v.setViewVisibility(R.id.birthday_row, titles == null ? View.GONE : View.VISIBLE);
         if (titles == null) return;
         String more = titles.size() > 1 ? " +" + (titles.size() - 1) : "";
@@ -289,12 +325,12 @@ final class WidgetUpdater {
         v.setImageViewBitmap(R.id.birthday_title, TextBitmap.drawPx(c, text, font, textPx, p.ink));
         v.setContentDescription(R.id.birthday_row, String.join(", ", titles));
         Uri day = CalendarContract.CONTENT_URI.buildUpon().appendPath("time").appendPath(String.valueOf(now)).build();
-        v.setOnClickPendingIntent(R.id.birthday_row, activity(c, 4, new Intent(Intent.ACTION_VIEW, day)));
+        if (taps) v.setOnClickPendingIntent(R.id.birthday_row, activity(c, 4, new Intent(Intent.ACTION_VIEW, day)));
     }
 
     /** ALARM (clock) ╰7:00, with the weekday when it isn't within the next day. */
     private static void bindAlarm(Context c, RemoteViews v, long now, AlarmManager.AlarmClockInfo alarm,
-            Typeface font, float textPx, Palette p) {
+            Typeface font, float textPx, Palette p, boolean taps) {
         v.setViewVisibility(R.id.alarm_row, alarm == null ? View.GONE : View.VISIBLE);
         if (alarm == null) return;
         long at = alarm.getTriggerTime();
@@ -305,6 +341,7 @@ final class WidgetUpdater {
         String label = c.getString(R.string.label_alarm);
         bindBracket(c, v, R.id.alarm_label, label, R.id.alarm_count, count, font, textPx, p);
         v.setContentDescription(R.id.alarm_row, label + " " + count);
+        if (!taps) return;
         PendingIntent show = alarm.getShowIntent();
         v.setOnClickPendingIntent(R.id.alarm_row,
                 show != null ? show : activity(c, 5, new Intent(AlarmClock.ACTION_SHOW_ALARMS)));
@@ -312,7 +349,7 @@ final class WidgetUpdater {
 
     /** CHARGING (bolt) ╰82% · 40MIN while plugged in; CHARGED (bolt) ╰100% once full. */
     private static void bindCharging(Context c, RemoteViews v, DeviceStatus.Battery b, Typeface font,
-            float textPx, Palette p) {
+            float textPx, Palette p, boolean taps) {
         v.setViewVisibility(R.id.charge_row, b == null ? View.GONE : View.VISIBLE);
         if (b == null) return;
         String label = c.getString(b.full ? R.string.label_charged : R.string.label_charging);
@@ -320,7 +357,54 @@ final class WidgetUpdater {
         if (b.msToFull > 0) count += " · " + duration(c, b.msToFull);
         bindBracket(c, v, R.id.charge_label, label, R.id.charge_count, count, font, textPx, p);
         v.setContentDescription(R.id.charge_row, label + " " + count);
-        v.setOnClickPendingIntent(R.id.charge_row, activity(c, 6, new Intent(Intent.ACTION_POWER_USAGE_SUMMARY)));
+        if (taps) v.setOnClickPendingIntent(R.id.charge_row, activity(c, 6, new Intent(Intent.ACTION_POWER_USAGE_SUMMARY)));
+    }
+
+    /** TIMER (hourglass) ╰4MIN; ╰PAUSED; ╰DONE once it has gone off. "+1" for more timers. */
+    private static void bindTimer(Context c, RemoteViews v, long now, long end, int count, Typeface font,
+            float textPx, Palette p, boolean taps) {
+        v.setViewVisibility(R.id.timer_row, end == 0 ? View.GONE : View.VISIBLE);
+        if (end == 0) return;
+        String text;
+        if (end == Prefs.TIMER_PAUSED) {
+            text = c.getString(R.string.timer_paused);
+        } else if (end <= now) {
+            text = c.getString(R.string.timer_done);
+        } else {
+            text = duration(c, end - now);
+        }
+        if (count > 1) text += " +" + (count - 1);
+        String label = c.getString(R.string.label_timer);
+        bindBracket(c, v, R.id.timer_label, label, R.id.timer_count, text, font, textPx, p);
+        v.setContentDescription(R.id.timer_row, label + " " + text);
+        if (taps) v.setOnClickPendingIntent(R.id.timer_row, activity(c, 7, new Intent(AlarmClock.ACTION_SHOW_TIMERS)));
+    }
+
+    /**
+     * FLASHLIGHT (torch) (TAP TO TURN OFF), with the hint in a filled bubble like the weather
+     * labels, shortened to TURN OFF when the widget is too narrow. The tap is on the whole
+     * widget (see buildMicrographics).
+     */
+    private static void bindTorch(Context c, RemoteViews v, boolean on, Typeface font, float textPx, Palette p,
+            Bundle options) {
+        v.setViewVisibility(R.id.torch_row, on ? View.VISIBLE : View.GONE);
+        if (!on) return;
+        String label = c.getString(R.string.label_flashlight);
+        v.setImageViewBitmap(R.id.torch_label, TextBitmap.drawPx(c, label, font, textPx, p.ink));
+        String hint = c.getString(R.string.torch_tap_off);
+        int widthDp = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 0);
+        if (widthDp > 0) {
+            float density = c.getResources().getDisplayMetrics().density;
+            Paint paint = new Paint();
+            paint.setTypeface(font);
+            paint.setTextSize(textPx);
+            int iconPx = Math.round(c.getResources().getDimension(R.dimen.mg_icon));
+            float gapPx = c.getResources().getDimension(R.dimen.mg_gap);
+            float room = widthDp * density - 16 * density - paint.measureText(label) - iconPx - 2 * gapPx;
+            if (BubblePill.width(c, hint, iconPx) > room) hint = c.getString(R.string.torch_off_short);
+        }
+        v.setImageViewBitmap(R.id.torch_pill, BubblePill.draw(c, hint, p.primary));
+        v.setContentDescription(R.id.torch_row, c.getString(R.string.torch_description));
     }
 
     /** A "LABEL (icon) ╰COUNT" row: label in ink, the bracketed count in the tertiary accent. */
