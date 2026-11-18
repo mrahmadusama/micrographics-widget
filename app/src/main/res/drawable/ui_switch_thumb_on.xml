@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp">
+    <item android:width="24dp" android:height="32dp">
+        <shape><size android:width="24dp" android:height="32dp" /><solid android:color="@android:color/transparent" /></shape>
+    </item>
+    <item android:width="24dp" android:height="24dp" android:gravity="center">
+        <shape android:shape="oval"><solid android:color="@color/ui_switch_thumb_on" /></shape>
+    </item>
+    <item android:width="16dp" android:height="16dp" android:gravity="center">
+        <vector android:width="16dp" android:height="16dp" android:viewportWidth="24" android:viewportHeight="24">
+            <path android:pathData="M4.5,12.5L9.5,17.5L19.5,7" android:strokeColor="@color/ui_on_primary_container" android:strokeWidth="2.6" android:strokeLineCap="square" />
+        </vector>
+    </item>
+</layer-list>

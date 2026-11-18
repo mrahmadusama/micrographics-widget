@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Grouped list item: large outer corners, small inner ones (Material 3 Expressive lists). -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android" android:color="?android:attr/colorControlHighlight">
+    <item>
+        <shape>
+            <solid android:color="@color/ui_container" />
+            <corners android:topLeftRadius="28dp" android:topRightRadius="28dp"
+                android:bottomLeftRadius="28dp" android:bottomRightRadius="28dp" />
+        </shape>
+    </item>
+</ripple>

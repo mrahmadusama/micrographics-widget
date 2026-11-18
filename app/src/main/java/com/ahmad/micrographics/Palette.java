@@ -39,8 +39,22 @@ final class Palette {
                 c.getColor(android.R.color.system_accent3_200));
     }
 
+    /**
+     * A backdrop for previewing the widget: the wallpaper's main colour when Android reports
+     * one, else a neutral that suits the ink.
+     */
+    static int previewBackdrop(Context c) {
+        try {
+            WallpaperColors colors = WallpaperManager.getInstance(c).getWallpaperColors(WallpaperManager.FLAG_SYSTEM);
+            if (colors != null) return colors.getPrimaryColor().toArgb();
+        } catch (RuntimeException e) {
+            // Fall through to a neutral backdrop.
+        }
+        return c.getColor(darkInk(c) ? android.R.color.system_neutral2_100 : android.R.color.system_neutral1_900);
+    }
+
     /** True when the widget should be drawn dark, for a light wallpaper. */
-    private static boolean darkInk(Context c) {
+    static boolean darkInk(Context c) {
         switch (Prefs.ink(c)) {
             case Prefs.INK_LIGHT:
                 return false;

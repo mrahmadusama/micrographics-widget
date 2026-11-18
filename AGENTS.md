@@ -63,6 +63,13 @@ render it with `qlmanage -t -s 1400 -o <dir> page.html` (Quick Look outputs `pag
   (`DeviceStatus.torchOn`); the listener service also keeps a callback so changes redraw at once.
 - "LABEL (icon) ╰COUNT" rows share one shape: a label bitmap, an icon, and a FrameLayout with
   `_corner`, `_line` and `_count` ImageViews. Copy an existing one and bind it with `bindBracket`.
+- Pills drawn in code: `DayPill` (filled, knocked-out day), `BubblePill` (filled speech bubble
+  like the weather labels), `OutlinePill` (outlined like the month labels).
+- Setup screen: Material 3 Expressive look built with no libraries: `ui_*` colour roles map to
+  `@android:color/system_*` (values-night for dark), grouped list items use `ui_item_top/middle/bottom`
+  (28dp outer, 6dp inner corners), and the colour choice is a connected button group of
+  RadioButtons. Switches copy Pixel Settings (`Ui.Item.Switch`: `ui_switch_track`/`ui_switch_thumb`,
+  tints nulled; the track's 6dp and thumb's 2dp side padding put the thumb 4dp inside). The preview at the top is the real widget (`WidgetUpdater.preview`) applied locally.
 - Nothing's drawables (`micrographics_*`, gooey font) belong to Nothing; keep the repo private.
   New icons (`mg_icon_*`) are drawn by hand on the same 73.04 viewport in a chunky filled style.
 

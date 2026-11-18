@@ -12,7 +12,11 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.graphics.drawable.GradientDrawable;
+import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.RemoteViews;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Switch;
@@ -32,6 +36,9 @@ public class SetupActivity extends Activity {
     private TextView statusLocation;
     private TextView statusCalendar;
     private TextView statusMessage;
+    private FrameLayout previewHost;
+    /** Bumped on each preview request, so a slow, older render doesn't replace a newer one. */
+    private int previewGeneration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +56,8 @@ public class SetupActivity extends Activity {
         statusLocation = findViewById(R.id.status_location);
         statusCalendar = findViewById(R.id.status_calendar);
         statusMessage = findViewById(R.id.status_message);
+        previewHost = findViewById(R.id.preview_host);
+        previewHost.post(this::updatePreview);
 
         AppWidgetManager awm = getSystemService(AppWidgetManager.class);
         Button pin = findViewById(R.id.btn_pin);
@@ -83,10 +92,16 @@ public class SetupActivity extends Activity {
         RadioGroup ink = findViewById(R.id.ink);
         // Indexed by the Prefs.INK_* values.
         int[] inkButtons = {R.id.ink_light, R.id.ink_dark, R.id.ink_system, R.id.ink_auto};
+        int[] inkHints = {R.string.setup_ink_light, R.string.setup_ink_dark, R.string.setup_ink_system,
+                R.string.setup_ink_auto};
+        TextView inkHint = findViewById(R.id.ink_hint);
         ink.check(inkButtons[Prefs.ink(this)]);
+        inkHint.setText(inkHints[Prefs.ink(this)]);
         ink.setOnCheckedChangeListener((group, checkedId) -> {
             for (int i = 0; i < inkButtons.length; i++) {
-                if (inkButtons[i] == checkedId) Prefs.setInk(this, i);
+                if (inkButtons[i] != checkedId) continue;
+                Prefs.setInk(this, i);
+                inkHint.setText(inkHints[i]);
             }
             refreshWidget();
         });
@@ -97,6 +112,13 @@ public class SetupActivity extends Activity {
             Prefs.setAccents(this, checked);
             refreshWidget();
         });
+        Switch amPm = findViewById(R.id.switch_am_pm);
+        amPm.setChecked(Prefs.amPm(this));
+        amPm.setOnCheckedChangeListener((b, checked) -> {
+            Prefs.setAmPm(this, checked);
+            refreshWidget();
+        });
+
         bindRowSwitch(R.id.show_timer, Prefs.ROW_TIMER);
         bindRowSwitch(R.id.show_flashlight, Prefs.ROW_FLASHLIGHT);
         bindRowSwitch(R.id.show_weather, Prefs.ROW_WEATHER);
@@ -118,7 +140,7 @@ public class SetupActivity extends Activity {
 
         findViewById(R.id.btn_refresh).setOnClickListener(v -> {
             refreshWidget();
-            statusMessage.setText(R.string.status_refreshed);
+            showMessage(R.string.status_refreshed);
         });
         findViewById(R.id.btn_done).setOnClickListener(v -> finish());
     }
@@ -146,13 +168,13 @@ public class SetupActivity extends Activity {
         statusCalendar.setText(Meeting.hasPermission(this)
                 ? R.string.status_calendar_on : R.string.status_calendar_off);
         boolean allGranted = Meeting.hasPermission(this) && hasLocationPermission();
-        findViewById(R.id.btn_permissions).setEnabled(!allGranted);
+        findViewById(R.id.btn_permissions).setVisibility(allGranted ? View.GONE : View.VISIBLE);
         findViewById(R.id.btn_locate).setEnabled(hasLocationPermission());
         boolean listener = getSystemService(NotificationManager.class)
                 .isNotificationListenerAccessGranted(new ComponentName(this, StatusListener.class));
         ((TextView) findViewById(R.id.status_listener)).setText(
                 listener ? R.string.status_listener_on : R.string.status_listener_off);
-        findViewById(R.id.btn_listener).setEnabled(!listener);
+        findViewById(R.id.btn_listener).setVisibility(listener ? View.GONE : View.VISIBLE);
     }
 
     private boolean hasLocationPermission() {
@@ -173,7 +195,7 @@ public class SetupActivity extends Activity {
     @SuppressLint("MissingPermission") // checked by hasLocationPermission()
     private void locate() {
         if (!hasLocationPermission()) return;
-        statusMessage.setText(R.string.status_locating);
+        showMessage(R.string.status_locating);
         LocationManager lm = getSystemService(LocationManager.class);
         String provider = lm.hasProvider(LocationManager.FUSED_PROVIDER)
                 ? LocationManager.FUSED_PROVIDER : LocationManager.NETWORK_PROVIDER;
@@ -189,18 +211,18 @@ public class SetupActivity extends Activity {
 
     private void onLocation(Location loc) {
         if (loc == null) {
-            statusMessage.setText(R.string.status_location_failed);
+            showMessage(R.string.status_location_failed);
             return;
         }
         Prefs.setLocation(this, loc.getLatitude(), loc.getLongitude(), getString(R.string.my_location));
-        statusMessage.setText("");
+        showMessage("");
         showStatus();
         refreshWidget();
     }
 
     private void lookUpCity(String name) {
         if (name.isEmpty()) return;
-        statusMessage.setText(R.string.status_locating);
+        showMessage(R.string.status_locating);
         new Thread(() -> {
             String[] display = new String[1];
             double[] latLon = null;
@@ -213,18 +235,46 @@ public class SetupActivity extends Activity {
             runOnUiThread(() -> {
                 if (isFinishing()) return;
                 if (found == null) {
-                    statusMessage.setText(R.string.status_city_failed);
+                    showMessage(R.string.status_city_failed);
                     return;
                 }
                 Prefs.setLocation(this, found[0], found[1], display[0]);
-                statusMessage.setText("");
+                showMessage("");
                 showStatus();
                 refreshWidget();
             });
         }, "micrographics-geocode").start();
     }
 
+    /** Shows a one-line status under the weather settings, or hides the line when empty. */
+    private void showMessage(CharSequence text) {
+        statusMessage.setText(text);
+        statusMessage.setVisibility(text.length() == 0 ? View.GONE : View.VISIBLE);
+    }
+
+    private void showMessage(int text) {
+        showMessage(getText(text));
+    }
+
     private void refreshWidget() {
         MicrographicsWidget.refreshAsync(this, null);
+        updatePreview();
+    }
+
+    /** Redraws the live preview with the current settings, building it off the main thread. */
+    private void updatePreview() {
+        int generation = ++previewGeneration;
+        float density = getResources().getDisplayMetrics().density;
+        int widthDp = Math.max(250, Math.round(previewHost.getWidth() / density));
+        new Thread(() -> {
+            RemoteViews views = WidgetUpdater.preview(this, widthDp, 280);
+            int backdrop = Palette.previewBackdrop(this);
+            runOnUiThread(() -> {
+                if (isFinishing() || generation != previewGeneration) return;
+                ((GradientDrawable) findViewById(R.id.preview_frame).getBackground().mutate()).setColor(backdrop);
+                previewHost.removeAllViews();
+                previewHost.addView(views.apply(this, previewHost));
+            });
+        }, "micrographics-preview").start();
     }
 }

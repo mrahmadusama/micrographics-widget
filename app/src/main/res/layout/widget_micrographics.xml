@@ -310,7 +310,7 @@
         </FrameLayout>
     </LinearLayout>
 
-    <!-- ALARM (clock) ╰7:00: the next alarm within a week. -->
+    <!-- (->) (clock) 8:00AM: the next alarm within a week, with the weekday when it is more than a day away. -->
     <LinearLayout
         android:id="@+id/alarm_row"
         android:layout_width="wrap_content"
@@ -321,9 +321,12 @@
         android:visibility="gone">
 
         <ImageView
-            android:id="@+id/alarm_label"
+            android:id="@+id/alarm_arrow"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="@dimen/mg_icon"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/micrographics_meeting_arrow" />
 
         <ImageView
             android:id="@+id/alarm_icon"
@@ -334,36 +337,14 @@
             android:scaleType="fitCenter"
             android:src="@drawable/mg_icon_alarm" />
 
-        <FrameLayout
+        <ImageView
+            android:id="@+id/alarm_time"
             android:layout_width="wrap_content"
-            android:layout_height="26dp"
-            android:layout_marginStart="@dimen/mg_gap">
-
-            <ImageView
-                android:id="@+id/alarm_corner"
-                android:layout_width="10dp"
-                android:layout_height="26dp"
-                android:src="@drawable/mg_count_corner" />
-
-            <ImageView
-                android:id="@+id/alarm_line"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="fitXY"
-                android:src="@drawable/mg_count_line" />
-
-            <ImageView
-                android:id="@+id/alarm_count"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:paddingStart="10dp"
-                android:paddingEnd="6dp"
-                android:paddingBottom="3dp"
-                android:scaleType="center" />
-        </FrameLayout>
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/mg_gap" />
     </LinearLayout>
 
-    <!-- CHARGING (bolt) ╰82% · 40MIN: while plugged in. -->
+    <!-- CHARGING (bolt) (82%) ╰40MIN: while plugged in; the time is left out when unknown. -->
     <LinearLayout
         android:id="@+id/charge_row"
         android:layout_width="wrap_content"
@@ -387,7 +368,16 @@
             android:scaleType="fitCenter"
             android:src="@drawable/micrographics_weather_icon_thunder" />
 
+        <ImageView
+            android:id="@+id/charge_pill"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/mg_icon"
+            android:layout_marginStart="@dimen/mg_gap"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter" />
+
         <FrameLayout
+            android:id="@+id/charge_bracket"
             android:layout_width="wrap_content"
             android:layout_height="26dp"
             android:layout_marginStart="@dimen/mg_gap">

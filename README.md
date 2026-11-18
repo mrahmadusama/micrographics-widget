@@ -6,7 +6,7 @@ lock screen clocks.
 **Micrographics clock**
 
 ```
-FRI (25)(JUL)  10:27
+FRI (25)(JUL)  10:27AM
 I< 23°(C)  * (SUNNY)
 (avatar) WEEKLY DESIGN SYNC (->)
 STARTING (hand) ╰3MIN
@@ -56,7 +56,7 @@ Needs Android 12 or newer.
   draw the weather icon and countdowns in its tertiary colour. Turn it off for plain monochrome.
 - **Rows**: running timer (`TIMER (hourglass) ╰4MIN`), flashlight while on
   (`FLASHLIGHT (torch) ╰ON`), weather, next meeting, today's birthdays (`(cake) ALEX'S BIRTHDAY`), next alarm
-  (`ALARM (clock) ╰7:00`) and battery while charging (`CHARGING (bolt) ╰82% · 40MIN`). Each can be
+  (`(->) (clock) 8:00AM`) and battery while charging (`CHARGING (bolt) (82%) ╰40MIN`). Each can be
   turned off in the app. When the widget is too short for all of them, they drop in this order:
   alarm, birthdays, charging, meeting, weather, flashlight, timer.
 - **Taps**: tapping the widget opens the clock app. While the flashlight is on, tapping anywhere

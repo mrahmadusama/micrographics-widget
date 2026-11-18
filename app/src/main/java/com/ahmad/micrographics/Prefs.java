@@ -14,6 +14,7 @@ final class Prefs {
     private static final String ACCENTS = "accents";
     private static final String SHOW = "show_";
     private static final String ROWS_OPEN_APPS = "rows_open_apps";
+    private static final String AM_PM = "am_pm";
     private static final String TIMER_END = "timer_end";
     private static final String TIMER_COUNT = "timer_count";
     private static final String TEMP = "weather_temp";
@@ -103,6 +104,15 @@ final class Prefs {
 
     static void setInk(Context c, int value) {
         sp(c).edit().putInt(INK, value).apply();
+    }
+
+    /** Show AM/PM after 12-hour times (the top row and the alarm). On by default. */
+    static boolean amPm(Context c) {
+        return sp(c).getBoolean(AM_PM, true);
+    }
+
+    static void setAmPm(Context c, boolean value) {
+        sp(c).edit().putBoolean(AM_PM, value).apply();
     }
 
     /** Tapping opens the clock app (default), or each row opens its own app. */

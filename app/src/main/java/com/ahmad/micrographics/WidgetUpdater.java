@@ -66,11 +66,11 @@ final class WidgetUpdater {
             R.id.month, R.id.thermometer, R.id.therm_indicator, R.id.temp_unit, R.id.meeting_avatar,
     };
     private static final int[] PRIMARY_TINTED = {
-            R.id.weather_desc, R.id.meeting_arrow,
+            R.id.weather_desc, R.id.meeting_arrow, R.id.alarm_arrow,
     };
     private static final int[] TERTIARY_TINTED = {
             R.id.weather_icon, R.id.hands, R.id.count_corner, R.id.count_line,
-            R.id.birthday_icon, R.id.alarm_icon, R.id.alarm_corner, R.id.alarm_line,
+            R.id.birthday_icon, R.id.alarm_icon,
             R.id.charge_icon, R.id.charge_corner, R.id.charge_line,
             R.id.timer_icon, R.id.timer_corner, R.id.timer_line,
             R.id.torch_icon,
@@ -140,6 +140,18 @@ final class WidgetUpdater {
         }
     }
 
+    /**
+     * The Micrographics widget as it would look at this size right now, for the setup screen's
+     * live preview. Blocks (calendar, flashlight); call off the main thread.
+     */
+    static RemoteViews preview(Context c, int widthDp, int heightDp) {
+        long now = System.currentTimeMillis();
+        Bundle options = new Bundle();
+        options.putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, widthDp);
+        options.putInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, heightDp);
+        return buildMicrographics(c, now, Extras.read(c, now), options);
+    }
+
     /** What the optional rows show this minute, read once and shared by every widget. */
     private static final class Extras {
         Meeting meeting;
@@ -182,7 +194,7 @@ final class WidgetUpdater {
         v.setImageViewBitmap(R.id.day_name, TextBitmap.drawPx(c, dayName, font, textPx, p.ink));
         v.setImageViewBitmap(R.id.day_pill, DayPill.draw(c, cal.get(Calendar.DAY_OF_MONTH), p.primary));
         v.setImageViewResource(R.id.month, MONTHS[cal.get(Calendar.MONTH)]);
-        v.setImageViewBitmap(R.id.time, TextBitmap.drawPx(c, clockTime(c, now), font, textPx, p.ink));
+        v.setImageViewBitmap(R.id.time, TextBitmap.drawPx(c, clockTimeWithPeriod(c, now), font, textPx, p.ink));
         v.setContentDescription(R.id.date_row, DateFormat.format("EEEE d MMMM", now) + ", "
                 + DateFormat.getTimeFormat(c).format(now));
 
@@ -328,35 +340,46 @@ final class WidgetUpdater {
         if (taps) v.setOnClickPendingIntent(R.id.birthday_row, activity(c, 4, new Intent(Intent.ACTION_VIEW, day)));
     }
 
-    /** ALARM (clock) ╰7:00, with the weekday when it isn't within the next day. */
+    /** (->) (clock) 8:00AM, with the weekday when the alarm is more than a day away. */
     private static void bindAlarm(Context c, RemoteViews v, long now, AlarmManager.AlarmClockInfo alarm,
             Typeface font, float textPx, Palette p, boolean taps) {
         v.setViewVisibility(R.id.alarm_row, alarm == null ? View.GONE : View.VISIBLE);
         if (alarm == null) return;
         long at = alarm.getTriggerTime();
-        String count = clockTime(c, at);
+        String time = clockTimeWithPeriod(c, at);
         if (at - now >= 24 * 60 * MINUTE) {
-            count = DateFormat.format("EEE", at).toString().toUpperCase(Locale.getDefault()) + " " + count;
+            time = DateFormat.format("EEE", at).toString().toUpperCase(Locale.getDefault()) + " " + time;
         }
-        String label = c.getString(R.string.label_alarm);
-        bindBracket(c, v, R.id.alarm_label, label, R.id.alarm_count, count, font, textPx, p);
-        v.setContentDescription(R.id.alarm_row, label + " " + count);
+        v.setImageViewBitmap(R.id.alarm_time, TextBitmap.drawPx(c, time, font, textPx, p.ink));
+        v.setContentDescription(R.id.alarm_row, c.getString(R.string.alarm_description, time));
         if (!taps) return;
         PendingIntent show = alarm.getShowIntent();
         v.setOnClickPendingIntent(R.id.alarm_row,
                 show != null ? show : activity(c, 5, new Intent(AlarmClock.ACTION_SHOW_ALARMS)));
     }
 
-    /** CHARGING (bolt) ╰82% · 40MIN while plugged in; CHARGED (bolt) ╰100% once full. */
+    /**
+     * CHARGING (bolt) (82%) ╰40MIN while plugged in, the percentage in an outlined pill like the
+     * month; CHARGED (bolt) (100%) once full.
+     */
     private static void bindCharging(Context c, RemoteViews v, DeviceStatus.Battery b, Typeface font,
             float textPx, Palette p, boolean taps) {
         v.setViewVisibility(R.id.charge_row, b == null ? View.GONE : View.VISIBLE);
         if (b == null) return;
         String label = c.getString(b.full ? R.string.label_charged : R.string.label_charging);
-        String count = b.percent + "%";
-        if (b.msToFull > 0) count += " · " + duration(c, b.msToFull);
-        bindBracket(c, v, R.id.charge_label, label, R.id.charge_count, count, font, textPx, p);
-        v.setContentDescription(R.id.charge_row, label + " " + count);
+        String percent = b.percent + "%";
+        v.setImageViewBitmap(R.id.charge_label, TextBitmap.drawPx(c, label, font, textPx, p.ink));
+        v.setImageViewBitmap(R.id.charge_pill, OutlinePill.draw(c, percent, p.ink));
+        String description = label + " " + percent;
+        boolean toFull = b.msToFull > 0;
+        v.setViewVisibility(R.id.charge_bracket, toFull ? View.VISIBLE : View.GONE);
+        if (toFull) {
+            String time = duration(c, b.msToFull);
+            v.setImageViewBitmap(R.id.charge_count, TextBitmap.drawPx(c, time, font,
+                    c.getResources().getDimension(R.dimen.mg_text_small), p.tertiary));
+            description += ", full in " + time;
+        }
+        v.setContentDescription(R.id.charge_row, description);
         if (taps) v.setOnClickPendingIntent(R.id.charge_row, activity(c, 6, new Intent(Intent.ACTION_POWER_USAGE_SUMMARY)));
     }
 
@@ -437,6 +460,12 @@ final class WidgetUpdater {
         float density = c.getResources().getDisplayMetrics().density;
         float charDp = textPx * GEIST_ADVANCE_EM / density;
         return Math.max(6, (int) ((widthDp - chromeDp) / charDp));
+    }
+
+    /** 11:06AM in 12-hour mode (11:06 with AM/PM turned off), 23:06 in 24-hour mode. */
+    private static String clockTimeWithPeriod(Context c, long time) {
+        if (is24Hour(c) || !Prefs.amPm(c)) return clockTime(c, time);
+        return DateFormat.format("h:mma", time).toString().toUpperCase(Locale.getDefault());
     }
 
     private static String clockTime(Context c, long time) {

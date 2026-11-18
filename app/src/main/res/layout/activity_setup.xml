@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Setup screen in the Material 3 Expressive style: a big title, a live preview of the widget,
+     pill buttons, a connected button group and grouped lists, all in Material You colours. -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -8,216 +11,319 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:paddingStart="16dp"
+        android:paddingTop="32dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="32dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingStart="8dp"
             android:fontFamily="@font/geist_mono_mg"
             android:text="@string/setup_title"
             android:textAllCaps="true"
-            android:textSize="24sp" />
+            android:textColor="@color/ui_on_surface"
+            android:textSize="34sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/setup_intro" />
-        <Button
-            android:id="@+id/btn_pin"
+            android:layout_marginTop="6dp"
+            android:paddingStart="8dp"
+            android:text="@string/setup_subtitle"
+            android:textColor="@color/ui_on_surface_variant"
+            android:textSize="16sp" />
+
+        <!-- Live preview: the real widget RemoteViews, drawn here. The overlay eats taps. -->
+        <FrameLayout
+            android:id="@+id/preview_frame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/ui_preview"
+            android:minHeight="180dp"
+            android:padding="16dp">
+
+            <FrameLayout
+                android:id="@+id/preview_host"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:contentDescription="@string/setup_preview" />
+        </FrameLayout>
+
+        <Button
+            android:id="@+id/btn_pin"
+            style="@style/Ui.Button"
+            android:layout_marginTop="16dp"
             android:text="@string/setup_pin" />
 
         <Button
             android:id="@+id/btn_pin_gooey"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/Ui.Button.Tonal"
             android:text="@string/setup_pin_gooey" />
 
         <TextView
-            android:id="@+id/status_location"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:fontFamily="@font/geist_mono_mg" />
-
-        <TextView
-            android:id="@+id/status_calendar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:fontFamily="@font/geist_mono_mg" />
-
-        <TextView
-            android:id="@+id/status_message"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp" />
-
-        <Button
-            android:id="@+id/btn_permissions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/setup_permissions" />
-
-        <Button
-            android:id="@+id/btn_locate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/setup_use_location" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/city"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="@string/setup_city_hint"
-                android:imeOptions="actionDone"
-                android:inputType="textCapWords"
-                android:singleLine="true" />
-
-            <Button
-                android:id="@+id/btn_city"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/setup_set_city" />
-        </LinearLayout>
-
-        <Switch
-            android:id="@+id/switch_fahrenheit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/setup_fahrenheit" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            style="@style/Ui.Section"
             android:text="@string/setup_ink" />
 
         <RadioGroup
             android:id="@+id/ink"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:divider="@drawable/ui_gap"
+            android:orientation="horizontal"
+            android:showDividers="middle">
 
             <RadioButton
                 android:id="@+id/ink_auto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/setup_ink_auto" />
+                style="@style/Ui.Segment"
+                android:background="@drawable/ui_segment_first"
+                android:text="@string/ink_auto" />
 
             <RadioButton
                 android:id="@+id/ink_light"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/setup_ink_light" />
+                style="@style/Ui.Segment"
+                android:background="@drawable/ui_segment_middle"
+                android:text="@string/ink_light" />
 
             <RadioButton
                 android:id="@+id/ink_dark"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/setup_ink_dark" />
+                style="@style/Ui.Segment"
+                android:background="@drawable/ui_segment_middle"
+                android:text="@string/ink_dark" />
 
             <RadioButton
                 android:id="@+id/ink_system"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/setup_ink_system" />
+                style="@style/Ui.Segment"
+                android:background="@drawable/ui_segment_last"
+                android:text="@string/ink_system" />
+
         </RadioGroup>
+
+        <TextView
+            android:id="@+id/ink_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="12dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:textColor="@color/ui_on_surface_variant"
+            android:textSize="14sp" />
 
         <Switch
             android:id="@+id/switch_accents"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/Ui.Item.Switch"
+            android:background="@drawable/ui_item_single"
             android:text="@string/setup_accents" />
+
+        <TextView
+            style="@style/Ui.Section"
+            android:text="@string/setup_clock" />
+
+        <Switch
+            android:id="@+id/switch_am_pm"
+            style="@style/Ui.Item.Switch"
+            android:background="@drawable/ui_item_single"
+            android:text="@string/setup_am_pm" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="@string/setup_am_pm_hint"
+            android:textColor="@color/ui_on_surface_variant"
+            android:textSize="14sp" />
+
+        <TextView
+            style="@style/Ui.Section"
             android:text="@string/setup_rows" />
 
         <Switch
             android:id="@+id/show_timer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/Ui.Item.Switch"
+            android:background="@drawable/ui_item_top"
             android:text="@string/setup_show_timer" />
 
         <Switch
             android:id="@+id/show_flashlight"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/Ui.Item.Switch"
+            android:background="@drawable/ui_item_middle"
             android:text="@string/setup_show_flashlight" />
 
         <Switch
             android:id="@+id/show_weather"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/Ui.Item.Switch"
+            android:background="@drawable/ui_item_middle"
             android:text="@string/setup_show_weather" />
 
         <Switch
             android:id="@+id/show_meeting"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/Ui.Item.Switch"
+            android:background="@drawable/ui_item_middle"
             android:text="@string/setup_show_meeting" />
 
         <Switch
             android:id="@+id/show_birthday"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/Ui.Item.Switch"
+            android:background="@drawable/ui_item_middle"
             android:text="@string/setup_show_birthday" />
 
         <Switch
             android:id="@+id/show_alarm"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/Ui.Item.Switch"
+            android:background="@drawable/ui_item_middle"
             android:text="@string/setup_show_alarm" />
 
         <Switch
             android:id="@+id/show_charging"
+            style="@style/Ui.Item.Switch"
+            android:background="@drawable/ui_item_bottom"
+            android:text="@string/setup_show_charging" />
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/setup_show_charging" />
+            android:layout_marginTop="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="@string/setup_rows_hint"
+            android:textColor="@color/ui_on_surface_variant"
+            android:textSize="14sp" />
+
+        <TextView
+            style="@style/Ui.Section"
+            android:text="@string/setup_weather" />
+
+        <TextView
+            android:id="@+id/status_location"
+            style="@style/Ui.Item"
+            android:background="@drawable/ui_item_top" />
+
+        <LinearLayout
+            style="@style/Ui.Item"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp">
+
+            <EditText
+                android:id="@+id/city"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="@drawable/ui_field"
+                android:hint="@string/setup_city_hint"
+                android:imeOptions="actionDone"
+                android:inputType="textCapWords"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:singleLine="true"
+                android:textColor="@color/ui_on_surface"
+                android:textColorHint="@color/ui_on_surface_variant"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/btn_city"
+                style="@style/Ui.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="0dp"
+                android:minWidth="0dp"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:text="@string/setup_set_city" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_locate"
+            style="@style/Ui.Item"
+            android:gravity="start|center_vertical"
+            android:stateListAnimator="@null"
+            android:text="@string/setup_use_location"
+            android:textAllCaps="false"
+            android:textColor="@color/ui_primary"
+            android:textFontWeight="600" />
+
+        <Switch
+            android:id="@+id/switch_fahrenheit"
+            style="@style/Ui.Item.Switch"
+            android:background="@drawable/ui_item_bottom"
+            android:text="@string/setup_fahrenheit" />
+
+        <TextView
+            android:id="@+id/status_message"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingStart="8dp"
+            android:textColor="@color/ui_primary"
+            android:textSize="14sp" />
+
+        <TextView
+            style="@style/Ui.Section"
+            android:text="@string/setup_taps" />
 
         <Switch
             android:id="@+id/switch_rows_open_apps"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            style="@style/Ui.Item.Switch"
+            android:background="@drawable/ui_item_single"
             android:text="@string/setup_rows_open_apps" />
 
         <TextView
-            android:id="@+id/status_listener"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="@string/setup_taps_hint"
+            android:textColor="@color/ui_on_surface_variant"
+            android:textSize="14sp" />
+
+        <TextView
+            style="@style/Ui.Section"
+            android:text="@string/setup_access" />
+
+        <TextView
+            android:id="@+id/status_calendar"
+            style="@style/Ui.Item"
+            android:background="@drawable/ui_item_top" />
+
+        <TextView
+            android:id="@+id/status_listener"
+            style="@style/Ui.Item"
+            android:background="@drawable/ui_item_bottom" />
+
+        <Button
+            android:id="@+id/btn_permissions"
+            style="@style/Ui.Button.Tonal"
+            android:layout_marginTop="12dp"
+            android:text="@string/setup_permissions" />
 
         <Button
             android:id="@+id/btn_listener"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/Ui.Button.Tonal"
             android:text="@string/setup_notification_access" />
 
         <Button
             android:id="@+id/btn_refresh"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            style="@style/Ui.Button.Tonal"
+            android:layout_marginTop="28dp"
             android:text="@string/setup_refresh" />
 
         <Button
             android:id="@+id/btn_done"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/Ui.Button"
             android:text="@string/setup_done" />
     </LinearLayout>
 </ScrollView>

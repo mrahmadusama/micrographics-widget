@@ -1,3 +1,90 @@
 <resources>
-    <style name="Theme.Micrographics" parent="@android:style/Theme.DeviceDefault.DayNight" />
+    <!-- Setup screen: Material You colours on a plain surface, drawn edge to edge. -->
+    <style name="Theme.Micrographics" parent="@android:style/Theme.DeviceDefault.DayNight">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/ui_surface</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:colorAccent">@color/ui_primary</item>
+        <item name="android:colorControlActivated">@color/ui_primary</item>
+        <item name="android:textColorPrimary">@color/ui_on_surface</item>
+        <item name="android:textColorSecondary">@color/ui_on_surface_variant</item>
+    </style>
+
+    <!-- Parent of the setup screen's styles below. -->
+    <style name="Ui" />
+
+    <!-- Section headings: short, bold and in the primary colour. -->
+    <style name="Ui.Section">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">28dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:textColor">@color/ui_primary</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textFontWeight">600</item>
+    </style>
+
+    <!-- One item in a grouped list: 64dp tall, a 2dp gap to the next. -->
+    <style name="Ui.Item">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">2dp</item>
+        <item name="android:minHeight">64dp</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">@drawable/ui_item_middle</item>
+        <item name="android:textColor">@color/ui_on_surface</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="Ui.Item.Switch">
+        <item name="android:switchPadding">16dp</item>
+        <!-- Pixel-style switch (Material 3 Expressive): 52x32dp track, 24dp thumb with a check
+             or a cross. The track's 6dp side padding and the thumb's 2dp side padding make
+             Switch place the thumb 4dp inside the track at both ends. -->
+        <item name="android:thumb">@drawable/ui_switch_thumb</item>
+        <item name="android:track">@drawable/ui_switch_track</item>
+        <item name="android:thumbTint">@null</item>
+        <item name="android:trackTint">@null</item>
+        <item name="android:switchMinWidth">52dp</item>
+    </style>
+
+    <!-- Pill buttons. Filled for the main action, tonal for the rest. -->
+    <style name="Ui.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:background">@drawable/ui_button_filled</item>
+        <item name="android:textColor">@color/ui_on_primary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textFontWeight">600</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:elevation">0dp</item>
+    </style>
+
+    <style name="Ui.Button.Tonal">
+        <item name="android:background">@drawable/ui_button_tonal</item>
+        <item name="android:textColor">@color/ui_on_secondary_container</item>
+    </style>
+
+    <!-- Connected button group for the colour choice. -->
+    <style name="Ui.Segment">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">52dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textFontWeight">600</item>
+        <item name="android:textColor">@color/ui_segment_text</item>
+    </style>
 </resources>
