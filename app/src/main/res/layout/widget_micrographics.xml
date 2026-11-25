@@ -61,6 +61,7 @@
         android:orientation="horizontal">
 
         <FrameLayout
+            android:id="@+id/therm_frame"
             android:layout_width="16dp"
             android:layout_height="@dimen/mg_icon">
 
@@ -138,6 +139,7 @@
             android:src="@drawable/mg_icon_timer" />
 
         <FrameLayout
+            android:id="@+id/timer_frame"
             android:layout_width="wrap_content"
             android:layout_height="26dp"
             android:layout_marginStart="@dimen/mg_gap">
@@ -279,6 +281,7 @@
             android:src="@drawable/micrographics_hands_3" />
 
         <FrameLayout
+            android:id="@+id/count_frame"
             android:layout_width="wrap_content"
             android:layout_height="26dp"
             android:layout_marginStart="@dimen/mg_gap">

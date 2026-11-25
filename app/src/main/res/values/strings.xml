@@ -32,6 +32,8 @@
     <string name="ink_dark">Dark</string>
     <string name="ink_system">System</string>
     <string name="setup_rows_hint">Rows only show when there’s something to show, and drop from the bottom when the widget is too short.</string>
+    <string name="setup_shadow">Shadow</string>
+    <string name="setup_shadow_hint">A soft shadow under the text and icons, and filled-in letters in the pills. Turn on if the widget is hard to read on your wallpaper.</string>
     <string name="setup_clock">Clock</string>
     <string name="setup_am_pm">Show AM/PM</string>
     <string name="setup_am_pm_hint">On the time and the alarm row. Ignored when your phone uses 24-hour time.</string>

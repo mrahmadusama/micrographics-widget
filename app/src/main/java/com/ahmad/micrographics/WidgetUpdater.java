@@ -37,10 +37,13 @@ final class WidgetUpdater {
     private static final float GOOEY_TEXT_PX = 320;
     /** Geist Mono glyphs are 0.6 em wide, so a 22sp character is 13.2dp. */
     private static final float GEIST_ADVANCE_EM = 0.6f;
+    /** The root's 8dp padding, both sides. */
+    private static final int PADDING_X_DP = 16;
+    private static final int PADDING_Y_DP = 16;
     /** Widget width taken by padding, avatar, arrow and the gaps around the meeting title. */
-    private static final int MEETING_ROW_CHROME_DP = 16 + 34 + 36 + 16;
+    private static final int MEETING_ROW_CHROME_DP = PADDING_X_DP + 34 + 36 + 16;
     /** Widget width taken by padding, the cake and its gap beside a birthday. */
-    private static final int BIRTHDAY_ROW_CHROME_DP = 16 + 24 + 8;
+    private static final int BIRTHDAY_ROW_CHROME_DP = PADDING_X_DP + 24 + 8;
 
     private static final int[] MONTHS = {
             R.drawable.micrographics_month_jan, R.drawable.micrographics_month_feb,
@@ -56,24 +59,6 @@ final class WidgetUpdater {
             R.drawable.micrographics_hands_5, R.drawable.micrographics_hands_6,
             R.drawable.micrographics_hands_7, R.drawable.micrographics_hands_8,
             R.drawable.micrographics_hands_9, R.drawable.micrographics_hands_10,
-    };
-
-    /**
-     * The vector icons of the Micrographics layout, by which palette colour they take. They're
-     * all drawn in one colour, so a colour filter recolours them.
-     */
-    private static final int[] INK_TINTED = {
-            R.id.month, R.id.thermometer, R.id.therm_indicator, R.id.temp_unit, R.id.meeting_avatar,
-    };
-    private static final int[] PRIMARY_TINTED = {
-            R.id.weather_desc, R.id.meeting_arrow, R.id.alarm_arrow,
-    };
-    private static final int[] TERTIARY_TINTED = {
-            R.id.weather_icon, R.id.hands, R.id.count_corner, R.id.count_line,
-            R.id.birthday_icon, R.id.alarm_icon,
-            R.id.charge_icon, R.id.charge_corner, R.id.charge_line,
-            R.id.timer_icon, R.id.timer_corner, R.id.timer_line,
-            R.id.torch_icon,
     };
 
     private WidgetUpdater() {}
@@ -116,7 +101,7 @@ final class WidgetUpdater {
         if (ids.length == 0) return;
         String time = DateFormat.format(is24Hour(c) ? "HHmm" : "hhmm", System.currentTimeMillis()).toString();
         RemoteViews v = new RemoteViews(c.getPackageName(), R.layout.widget_gooey);
-        v.setImageViewBitmap(R.id.gooey_time, TextBitmap.drawPx(c, time, TextBitmap.gooey(c), GOOEY_TEXT_PX, Palette.resolve(c).primary));
+        v.setImageViewBitmap(R.id.gooey_time, gooeyBitmap(c, time));
         v.setContentDescription(R.id.gooey_time, DateFormat.getTimeFormat(c).format(System.currentTimeMillis()));
         if (Prefs.show(c, Prefs.ROW_FLASHLIGHT) && DeviceStatus.torchOn(c)) {
             Intent off = new Intent(c, MicrographicsWidget.class).setAction(ACTION_TORCH_OFF);
@@ -183,18 +168,16 @@ final class WidgetUpdater {
         Typeface font = TextBitmap.geistMono(c);
         float textPx = c.getResources().getDimension(R.dimen.mg_text);
         Palette p = Palette.resolve(c);
-        for (int id : INK_TINTED) v.setInt(id, "setColorFilter", p.ink);
-        for (int id : PRIMARY_TINTED) v.setInt(id, "setColorFilter", p.primary);
-        for (int id : TERTIARY_TINTED) v.setInt(id, "setColorFilter", p.tertiary);
+        bindStaticIcons(c, v, p);
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(now);
 
         // Row 1: FRI (25) (JUL) 10:27
         String dayName = DateFormat.format("EEE", now).toString().toUpperCase(Locale.getDefault());
-        v.setImageViewBitmap(R.id.day_name, TextBitmap.drawPx(c, dayName, font, textPx, p.ink));
-        v.setImageViewBitmap(R.id.day_pill, DayPill.draw(c, cal.get(Calendar.DAY_OF_MONTH), p.primary));
-        v.setImageViewResource(R.id.month, MONTHS[cal.get(Calendar.MONTH)]);
-        v.setImageViewBitmap(R.id.time, TextBitmap.drawPx(c, clockTimeWithPeriod(c, now), font, textPx, p.ink));
+        v.setImageViewBitmap(R.id.day_name, Shade.text(c, dayName, font, textPx, p.ink, p));
+        pill(c, v, R.id.day_pill, DayPill.draw(c, cal.get(Calendar.DAY_OF_MONTH), p.primary, p.hole), p);
+        icon(c, v, p, R.id.month, MONTHS[cal.get(Calendar.MONTH)], p.ink, 0, 24, false);
+        v.setImageViewBitmap(R.id.time, Shade.text(c, clockTimeWithPeriod(c, now), font, textPx, p.ink, p));
         v.setContentDescription(R.id.date_row, DateFormat.format("EEEE d MMMM", now) + ", "
                 + DateFormat.getTimeFormat(c).format(now));
 
@@ -258,20 +241,20 @@ final class WidgetUpdater {
         Paint.FontMetrics fm = paint.getFontMetrics();
         float textDp = (fm.descent - fm.ascent) / density;
         float rowDp = Math.max(textDp, 26) + c.getResources().getDimension(R.dimen.mg_row_gap) / density;
-        float available = heightDp - 16 - Math.max(textDp, 24);
+        float available = heightDp - PADDING_Y_DP - Math.max(textDp, 24);
         return Math.max(0, (int) (available / rowDp));
     }
 
     private static void bindWeather(Context c, RemoteViews v, Typeface font, float textPx, Palette p) {
         boolean fahrenheit = Prefs.fahrenheit(c);
         Weather w = Prefs.weather(c);
-        v.setImageViewResource(R.id.temp_unit,
-                fahrenheit ? R.drawable.micrographics_farenheight : R.drawable.micrographics_celcius);
+        icon(c, v, p, R.id.temp_unit,
+                fahrenheit ? R.drawable.micrographics_farenheight : R.drawable.micrographics_celcius, p.ink, 24, 24, false);
         String condition = w == null ? "unavailable" : w.condition();
-        v.setImageViewResource(R.id.weather_icon, Weather.iconRes(condition));
-        v.setImageViewResource(R.id.weather_desc, Weather.descRes(condition));
+        icon(c, v, p, R.id.weather_icon, Weather.iconRes(condition), p.tertiary, 0, 24, false);
+        icon(c, v, p, R.id.weather_desc, Weather.descRes(condition), p.primary, 0, 24, true);
         String temp = w == null ? "--°" : Math.round(w.temperature) + "°";
-        v.setImageViewBitmap(R.id.temp, TextBitmap.drawPx(c, temp, font, textPx, p.ink));
+        v.setImageViewBitmap(R.id.temp, Shade.text(c, temp, font, textPx, p.ink, p));
         v.setContentDescription(R.id.weather_row, temp + (fahrenheit ? "F " : "C ") + condition.replace('_', ' '));
         float top = 8;
         if (w != null) {
@@ -280,6 +263,8 @@ final class WidgetUpdater {
             double warmth = Math.max(0, Math.min(1, (w.temperature - low) / (high - low)));
             top = (float) (1 + (1 - warmth) * 14);
         }
+        // With the shadow on, the thermometer and marker images both gain the same padding, so
+        // the marker keeps its place relative to the glass.
         v.setViewLayoutMargin(R.id.therm_indicator, RemoteViews.MARGIN_TOP, top, TypedValue.COMPLEX_UNIT_DIP);
     }
 
@@ -291,7 +276,7 @@ final class WidgetUpdater {
         if (m == null) return;
 
         v.setImageViewBitmap(R.id.meeting_title,
-                TextBitmap.drawPx(c, fit(m.title, maxTitleChars), font, textPx, p.ink));
+                Shade.text(c, fit(m.title, maxTitleChars), font, textPx, p.ink, p));
         v.setContentDescription(R.id.meeting_title, m.title);
 
         String label;
@@ -311,10 +296,11 @@ final class WidgetUpdater {
             label = c.getString(R.string.label_until);
             count = clockTime(c, m.end);
         }
-        bindBracket(c, v, R.id.status_label, label, R.id.count, count, font, textPx, p);
+        bindBracket(c, v, R.id.status_label, label, R.id.count, R.id.count_corner, R.id.count_line,
+                R.id.count_frame, count, font, textPx, p);
         v.setContentDescription(R.id.status_row, label + " " + count);
         v.setViewVisibility(R.id.hands, hands > 0 ? View.VISIBLE : View.GONE);
-        if (hands > 0) v.setImageViewResource(R.id.hands, HANDS[hands - 1]);
+        if (hands > 0) icon(c, v, p, R.id.hands, HANDS[hands - 1], p.tertiary, 24, 24, false);
 
         Intent open = new Intent(Intent.ACTION_VIEW,
                 ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, m.eventId))
@@ -334,7 +320,7 @@ final class WidgetUpdater {
         String more = titles.size() > 1 ? " +" + (titles.size() - 1) : "";
         String first = titles.get(0);
         String text = fit(first, maxChars - more.length()) + more;
-        v.setImageViewBitmap(R.id.birthday_title, TextBitmap.drawPx(c, text, font, textPx, p.ink));
+        v.setImageViewBitmap(R.id.birthday_title, Shade.text(c, text, font, textPx, p.ink, p));
         v.setContentDescription(R.id.birthday_row, String.join(", ", titles));
         Uri day = CalendarContract.CONTENT_URI.buildUpon().appendPath("time").appendPath(String.valueOf(now)).build();
         if (taps) v.setOnClickPendingIntent(R.id.birthday_row, activity(c, 4, new Intent(Intent.ACTION_VIEW, day)));
@@ -350,7 +336,7 @@ final class WidgetUpdater {
         if (at - now >= 24 * 60 * MINUTE) {
             time = DateFormat.format("EEE", at).toString().toUpperCase(Locale.getDefault()) + " " + time;
         }
-        v.setImageViewBitmap(R.id.alarm_time, TextBitmap.drawPx(c, time, font, textPx, p.ink));
+        v.setImageViewBitmap(R.id.alarm_time, Shade.text(c, time, font, textPx, p.ink, p));
         v.setContentDescription(R.id.alarm_row, c.getString(R.string.alarm_description, time));
         if (!taps) return;
         PendingIntent show = alarm.getShowIntent();
@@ -368,15 +354,15 @@ final class WidgetUpdater {
         if (b == null) return;
         String label = c.getString(b.full ? R.string.label_charged : R.string.label_charging);
         String percent = b.percent + "%";
-        v.setImageViewBitmap(R.id.charge_label, TextBitmap.drawPx(c, label, font, textPx, p.ink));
-        v.setImageViewBitmap(R.id.charge_pill, OutlinePill.draw(c, percent, p.ink));
+        v.setImageViewBitmap(R.id.charge_label, Shade.text(c, label, font, textPx, p.ink, p));
+        pill(c, v, R.id.charge_pill, OutlinePill.draw(c, percent, p.ink), p);
         String description = label + " " + percent;
         boolean toFull = b.msToFull > 0;
         v.setViewVisibility(R.id.charge_bracket, toFull ? View.VISIBLE : View.GONE);
         if (toFull) {
             String time = duration(c, b.msToFull);
-            v.setImageViewBitmap(R.id.charge_count, TextBitmap.drawPx(c, time, font,
-                    c.getResources().getDimension(R.dimen.mg_text_small), p.tertiary));
+            bindCount(c, v, R.id.charge_count, R.id.charge_corner, R.id.charge_line, R.id.charge_bracket,
+                    time, font, p);
             description += ", full in " + time;
         }
         v.setContentDescription(R.id.charge_row, description);
@@ -398,7 +384,8 @@ final class WidgetUpdater {
         }
         if (count > 1) text += " +" + (count - 1);
         String label = c.getString(R.string.label_timer);
-        bindBracket(c, v, R.id.timer_label, label, R.id.timer_count, text, font, textPx, p);
+        bindBracket(c, v, R.id.timer_label, label, R.id.timer_count, R.id.timer_corner, R.id.timer_line,
+                R.id.timer_frame, text, font, textPx, p);
         v.setContentDescription(R.id.timer_row, label + " " + text);
         if (taps) v.setOnClickPendingIntent(R.id.timer_row, activity(c, 7, new Intent(AlarmClock.ACTION_SHOW_TIMERS)));
     }
@@ -413,7 +400,7 @@ final class WidgetUpdater {
         v.setViewVisibility(R.id.torch_row, on ? View.VISIBLE : View.GONE);
         if (!on) return;
         String label = c.getString(R.string.label_flashlight);
-        v.setImageViewBitmap(R.id.torch_label, TextBitmap.drawPx(c, label, font, textPx, p.ink));
+        v.setImageViewBitmap(R.id.torch_label, Shade.text(c, label, font, textPx, p.ink, p));
         String hint = c.getString(R.string.torch_tap_off);
         int widthDp = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 0);
         if (widthDp > 0) {
@@ -423,19 +410,90 @@ final class WidgetUpdater {
             paint.setTextSize(textPx);
             int iconPx = Math.round(c.getResources().getDimension(R.dimen.mg_icon));
             float gapPx = c.getResources().getDimension(R.dimen.mg_gap);
-            float room = widthDp * density - 16 * density - paint.measureText(label) - iconPx - 2 * gapPx;
+            float room = widthDp * density - PADDING_X_DP * density - paint.measureText(label) - iconPx - 2 * gapPx;
             if (BubblePill.width(c, hint, iconPx) > room) hint = c.getString(R.string.torch_off_short);
         }
-        v.setImageViewBitmap(R.id.torch_pill, BubblePill.draw(c, hint, p.primary));
+        pill(c, v, R.id.torch_pill, BubblePill.draw(c, hint, p.primary, p.hole), p);
         v.setContentDescription(R.id.torch_row, c.getString(R.string.torch_description));
     }
 
     /** A "LABEL (icon) ╰COUNT" row: label in ink, the bracketed count in the tertiary accent. */
-    private static void bindBracket(Context c, RemoteViews v, int labelId, String label, int countId, String count,
-            Typeface font, float textPx, Palette p) {
-        v.setImageViewBitmap(labelId, TextBitmap.drawPx(c, label, font, textPx, p.ink));
-        v.setImageViewBitmap(countId, TextBitmap.drawPx(c, count, font,
-                c.getResources().getDimension(R.dimen.mg_text_small), p.tertiary));
+    private static void bindBracket(Context c, RemoteViews v, int labelId, String label, int countId, int cornerId,
+            int lineId, int frameId, String count, Typeface font, float textPx, Palette p) {
+        v.setImageViewBitmap(labelId, Shade.text(c, label, font, textPx, p.ink, p));
+        bindCount(c, v, countId, cornerId, lineId, frameId, count, font, p);
+    }
+
+    /**
+     * The "╰COUNT" bracket. Normally the corner and underline are their own vector views around
+     * the text; with the shadow on the whole bracket is one shadowed bitmap and those views hide.
+     */
+    private static void bindCount(Context c, RemoteViews v, int countId, int cornerId, int lineId, int frameId,
+            String count, Typeface font, Palette p) {
+        float smallPx = c.getResources().getDimension(R.dimen.mg_text_small);
+        if (!Shade.on(p)) {
+            v.setInt(cornerId, "setColorFilter", p.tertiary);
+            v.setInt(lineId, "setColorFilter", p.tertiary);
+            v.setImageViewBitmap(countId, TextBitmap.drawPx(c, count, font, smallPx, p.tertiary));
+            return;
+        }
+        v.setViewVisibility(cornerId, View.GONE);
+        v.setViewVisibility(lineId, View.GONE);
+        v.setViewPadding(countId, 0, 0, 0, 0);
+        v.setImageViewBitmap(countId, Shade.bracket(c, count, font, smallPx, p.tertiary, p));
+        v.setViewLayoutHeight(frameId, 26 + 2 * Shade.PAD_DP, TypedValue.COMPLEX_UNIT_DIP);
+    }
+
+    /** The icons set in the layout itself, recoloured (or redrawn with the shadow). */
+    private static void bindStaticIcons(Context c, RemoteViews v, Palette p) {
+        icon(c, v, p, R.id.thermometer, R.drawable.micrographics_thermometer, p.ink, 8, 24, false);
+        icon(c, v, p, R.id.therm_indicator, R.drawable.micrographics_thermometer_indicator, p.ink, 7, 8, false);
+        icon(c, v, p, R.id.meeting_avatar, R.drawable.micrographics_meeting_avatar, p.ink, 0, 24, false);
+        icon(c, v, p, R.id.meeting_arrow, R.drawable.micrographics_meeting_arrow, p.primary, 0, 24, true);
+        icon(c, v, p, R.id.alarm_arrow, R.drawable.micrographics_meeting_arrow, p.primary, 0, 24, true);
+        icon(c, v, p, R.id.birthday_icon, R.drawable.mg_icon_cake, p.tertiary, 24, 24, false);
+        icon(c, v, p, R.id.alarm_icon, R.drawable.mg_icon_alarm, p.tertiary, 0, 24, false);
+        icon(c, v, p, R.id.charge_icon, R.drawable.micrographics_weather_icon_thunder, p.tertiary, 0, 24, false);
+        icon(c, v, p, R.id.timer_icon, R.drawable.mg_icon_timer, p.tertiary, 0, 24, false);
+        icon(c, v, p, R.id.torch_icon, R.drawable.mg_icon_flashlight, p.tertiary, 0, 24, false);
+        if (Shade.on(p)) {
+            float pad = 2 * Shade.PAD_DP;
+            v.setViewLayoutWidth(R.id.therm_frame, 16 + pad, TypedValue.COMPLEX_UNIT_DIP);
+            v.setViewLayoutHeight(R.id.therm_frame, 24 + pad, TypedValue.COMPLEX_UNIT_DIP);
+        }
+    }
+
+    /**
+     * Shows vector {@code res} in {@code color}. Without the shadow that's the drawable plus a
+     * colour filter; with it, a shadowed bitmap, and the view grows by the shadow's padding
+     * ({@code wDp} 0 = the view's width wraps its content). {@code holes}: a filled pill whose
+     * cut-out shapes get filled while the shadow is on.
+     */
+    private static void icon(Context c, RemoteViews v, Palette p, int id, int res, int color, float wDp, float hDp,
+            boolean holes) {
+        if (!Shade.on(p)) {
+            v.setImageViewResource(id, res);
+            v.setInt(id, "setColorFilter", color);
+            return;
+        }
+        v.setImageViewBitmap(id, Shade.icon(c, res, color, wDp, hDp, holes, p));
+        float pad = 2 * Shade.PAD_DP;
+        v.setViewLayoutHeight(id, hDp + pad, TypedValue.COMPLEX_UNIT_DIP);
+        if (wDp > 0) v.setViewLayoutWidth(id, wDp + pad, TypedValue.COMPLEX_UNIT_DIP);
+    }
+
+    /** A pill drawn in code (24dp tall), shadowed when that's on, its view grown to match. */
+    private static void pill(Context c, RemoteViews v, int id, android.graphics.Bitmap bmp, Palette p) {
+        v.setImageViewBitmap(id, Shade.apply(c, bmp, p));
+        if (Shade.on(p)) {
+            v.setViewLayoutHeight(id, 24 + 2 * Shade.PAD_DP, TypedValue.COMPLEX_UNIT_DIP);
+        }
+    }
+
+    /** The Gooey clock's digits, in the primary colour, shadowed when that's on. */
+    private static android.graphics.Bitmap gooeyBitmap(Context c, String time) {
+        Palette p = Palette.resolve(c);
+        return Shade.apply(c, TextBitmap.drawPx(c, time, TextBitmap.gooey(c), GOOEY_TEXT_PX, p.primary), p);
     }
 
     /** 40MIN, 1H 20MIN. */

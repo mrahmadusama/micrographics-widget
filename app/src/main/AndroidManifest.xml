@@ -8,6 +8,13 @@
     <!-- Minute-accurate meeting countdowns. Granted at install for sideloaded apps targeting 33+. -->
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 
+    <!-- Lets DeviceStatus find the clock apps, so only their alarms show in the alarm row. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.SHOW_ALARMS" />
+        </intent>
+    </queries>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

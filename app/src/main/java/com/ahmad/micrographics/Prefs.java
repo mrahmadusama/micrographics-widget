@@ -15,6 +15,7 @@ final class Prefs {
     private static final String SHOW = "show_";
     private static final String ROWS_OPEN_APPS = "rows_open_apps";
     private static final String AM_PM = "am_pm";
+    private static final String SHADOW = "shadow";
     private static final String TIMER_END = "timer_end";
     private static final String TIMER_COUNT = "timer_count";
     private static final String TEMP = "weather_temp";
@@ -104,6 +105,15 @@ final class Prefs {
 
     static void setInk(Context c, int value) {
         sp(c).edit().putInt(INK, value).apply();
+    }
+
+    /** Soft shadow under the widget's text and icons, for bright or busy wallpapers. Off by default. */
+    static boolean shadow(Context c) {
+        return sp(c).getBoolean(SHADOW, false);
+    }
+
+    static void setShadow(Context c, boolean value) {
+        sp(c).edit().putBoolean(SHADOW, value).apply();
     }
 
     /** Show AM/PM after 12-hour times (the top row and the alarm). On by default. */

@@ -32,7 +32,8 @@ final class BubblePill {
         return (2 * (CAP_WIDTH + TEXT_GAP)) * heightPx / GRID_HEIGHT + paint.measureText(text);
     }
 
-    static Bitmap draw(Context c, String text, int color) {
+    /** {@code hole} fills the cut-out letters (Shadow setting); 0 leaves them see-through. */
+    static Bitmap draw(Context c, String text, int color, int hole) {
         int h = Math.round(c.getResources().getDimension(R.dimen.mg_icon));
         float unit = h / GRID_HEIGHT;
         Paint textPaint = textPaint(c, h);
@@ -55,7 +56,8 @@ final class BubblePill {
         canvas.drawPath(rightCap(), fill);
         canvas.restore();
 
-        textPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        textPaint.setXfermode(new PorterDuffXfermode(hole != 0 ? PorterDuff.Mode.SRC : PorterDuff.Mode.CLEAR));
+        if (hole != 0) textPaint.setColor(hole);
         Rect caps = new Rect();
         textPaint.getTextBounds("H", 0, 1, caps);
         float baseline = (h + caps.height()) / 2f - caps.bottom;

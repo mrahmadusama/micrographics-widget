@@ -22,11 +22,28 @@ final class DeviceStatus {
 
     private DeviceStatus() {}
 
-    /** The next alarm clock set in any app within the lookahead, or null. */
+    /**
+     * The next alarm within the lookahead if a clock app set it, or null. Any app can register an
+     * "alarm clock" (Nusuk uses one for a daily reminder), so alarms from apps that don't handle
+     * "show alarms" are ignored. Android only reports the single next one, so a reminder from
+     * another app hides the clock app's alarm until it has passed.
+     */
     static AlarmManager.AlarmClockInfo nextAlarm(Context c, long now) {
         AlarmManager.AlarmClockInfo info = c.getSystemService(AlarmManager.class).getNextAlarmClock();
         if (info == null || info.getTriggerTime() - now > ALARM_LOOKAHEAD_MS) return null;
+        android.app.PendingIntent show = info.getShowIntent();
+        if (show == null || !clockApps(c).contains(show.getCreatorPackage())) return null;
         return info;
+    }
+
+    /** Packages that open an alarm list: the phone's clock apps. Needs the manifest's queries. */
+    private static java.util.Set<String> clockApps(Context c) {
+        java.util.Set<String> pkgs = new java.util.HashSet<>();
+        for (android.content.pm.ResolveInfo ri : c.getPackageManager().queryIntentActivities(
+                new Intent(android.provider.AlarmClock.ACTION_SHOW_ALARMS), 0)) {
+            pkgs.add(ri.activityInfo.packageName);
+        }
+        return pkgs;
     }
 
     /**

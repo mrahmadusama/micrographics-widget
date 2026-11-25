@@ -63,6 +63,13 @@ render it with `qlmanage -t -s 1400 -o <dir> page.html` (Quick Look outputs `pag
   (`DeviceStatus.torchOn`); the listener service also keeps a callback so changes redraw at once.
 - "LABEL (icon) ╰COUNT" rows share one shape: a label bitmap, an icon, and a FrameLayout with
   `_corner`, `_line` and `_count` ImageViews. Copy an existing one and bind it with `bindBracket`.
+- Shadow setting (`Shade`): RemoteViews can't draw shadows, so with it on every text, pill,
+  icon and "╰COUNT" bracket is a bitmap with 2dp of padding for a blurred shadow, and fixed-size
+  views grow by 4dp (`icon()`/`pill()` in WidgetUpdater). Filled pills get their cut-out letters
+  filled (`Palette.hole`). Draw a tinted vector on its own canvas first: the tint recolours
+  everything already on the canvas it is drawn on.
+- Alarm row only shows alarms whose show-intent comes from an app handling SHOW_ALARMS (manifest
+  `<queries>`); other apps (e.g. Nusuk) register reminders as "alarm clocks" too.
 - Pills drawn in code: `DayPill` (filled, knocked-out day), `BubblePill` (filled speech bubble
   like the weather labels), `OutlinePill` (outlined like the month labels).
 - Setup screen: Material 3 Expressive look built with no libraries: `ui_*` colour roles map to

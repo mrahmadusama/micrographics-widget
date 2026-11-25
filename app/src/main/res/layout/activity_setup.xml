@@ -121,8 +121,24 @@
         <Switch
             android:id="@+id/switch_accents"
             style="@style/Ui.Item.Switch"
-            android:background="@drawable/ui_item_single"
+            android:background="@drawable/ui_item_top"
             android:text="@string/setup_accents" />
+
+        <Switch
+            android:id="@+id/switch_shadow"
+            style="@style/Ui.Item.Switch"
+            android:background="@drawable/ui_item_bottom"
+            android:text="@string/setup_shadow" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="@string/setup_shadow_hint"
+            android:textColor="@color/ui_on_surface_variant"
+            android:textSize="14sp" />
 
         <TextView
             style="@style/Ui.Section"

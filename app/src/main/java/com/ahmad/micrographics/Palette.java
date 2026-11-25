@@ -14,29 +14,43 @@ final class Palette {
     final int ink;
     final int primary;
     final int tertiary;
+    /** Shadow under every glyph (Shadow setting), or 0 when off: dark under white ink, light under black. */
+    final int shadow;
+    /** Fill for the cut-out letters of filled pills while the shadow is on, or 0. */
+    final int hole;
 
-    private Palette(int ink, int primary, int tertiary) {
+    private Palette(int ink, int primary, int tertiary, int shadow, int hole) {
         this.ink = ink;
         this.primary = primary;
         this.tertiary = tertiary;
+        this.shadow = shadow;
+        this.hole = hole;
     }
 
     static Palette resolve(Context c) {
+        Palette base = colours(c);
+        if (!Prefs.shadow(c)) return base;
+        boolean darkInk = darkInk(c);
+        return new Palette(base.ink, base.primary, base.tertiary,
+                darkInk ? 0xB3FFFFFF : 0xA6000000, darkInk ? 0xF2FFFFFF : 0xE6000000);
+    }
+
+    private static Palette colours(Context c) {
         boolean darkInk = darkInk(c);
         if (!Prefs.accents(c)) {
             int ink = c.getColor(darkInk ? R.color.mg_fg_dark : R.color.mg_fg);
-            return new Palette(ink, ink, ink);
+            return new Palette(ink, ink, ink, 0, 0);
         }
         // Material 3 Expressive pairing from the wallpaper-based system palette: near-neutral
         // text, a saturated primary for the pills and the tertiary hue for live values.
         if (darkInk) {
             return new Palette(c.getColor(android.R.color.system_neutral1_900),
                     c.getColor(android.R.color.system_accent1_700),
-                    c.getColor(android.R.color.system_accent3_600));
+                    c.getColor(android.R.color.system_accent3_600), 0, 0);
         }
         return new Palette(c.getColor(android.R.color.system_neutral1_50),
                 c.getColor(android.R.color.system_accent1_200),
-                c.getColor(android.R.color.system_accent3_200));
+                c.getColor(android.R.color.system_accent3_200), 0, 0);
     }
 
     /**

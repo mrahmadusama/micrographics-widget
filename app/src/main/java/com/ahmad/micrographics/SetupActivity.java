@@ -112,6 +112,13 @@ public class SetupActivity extends Activity {
             Prefs.setAccents(this, checked);
             refreshWidget();
         });
+        Switch shadow = findViewById(R.id.switch_shadow);
+        shadow.setChecked(Prefs.shadow(this));
+        shadow.setOnCheckedChangeListener((b, checked) -> {
+            Prefs.setShadow(this, checked);
+            refreshWidget();
+        });
+
         Switch amPm = findViewById(R.id.switch_am_pm);
         amPm.setChecked(Prefs.amPm(this));
         amPm.setOnCheckedChangeListener((b, checked) -> {

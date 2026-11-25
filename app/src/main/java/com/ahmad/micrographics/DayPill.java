@@ -22,7 +22,8 @@ final class DayPill {
 
     private DayPill() {}
 
-    static Bitmap draw(Context c, int day, int color) {
+    /** {@code hole} fills the cut-out digits (Shadow setting); 0 leaves them see-through. */
+    static Bitmap draw(Context c, int day, int color, int hole) {
         float density = c.getResources().getDisplayMetrics().density;
         int h = Math.round(HEIGHT_DP * density);
         Typeface font = c.getResources().getFont(R.font.geist_mono_mg);
@@ -44,7 +45,8 @@ final class DayPill {
         fill.setColor(color);
         canvas.drawRoundRect(new RectF(0, 0, w, h), h / 2f, h / 2f, fill);
 
-        text.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        text.setXfermode(new PorterDuffXfermode(hole != 0 ? PorterDuff.Mode.SRC : PorterDuff.Mode.CLEAR));
+        if (hole != 0) text.setColor(hole);
         text.getTextBounds(label, 0, label.length(), capBounds);
         float baseline = (h + capBounds.height()) / 2f - capBounds.bottom;
         canvas.drawText(label, (w - textWidth) / 2f, baseline, text);
